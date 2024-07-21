@@ -34,3 +34,30 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+
+//datatabe https://blog.logrocket.com/build-customized-data-tables-primereact/
+https://primereact.org/datatable/
+
+https://tanstack.com/table/latest
+
+https://www.youtube.com/watch?v=EaTNDGrCYIU
+
+
+//install tailwind css https://www.youtube.com/watch?v=vRqTNuX46PY
+
+//next locale https://www.youtube.com/watch?v=shDb9A6F77k
+
+next js locales https://www.youtube.com/watch?v=_airUG9o97w&list=PLyPmN8OaxCPb3lCMtklvEtTFAJ6MWAKXf
+
+
+
+react useeffect https://overreacted.io/a-complete-guide-to-useeffect/
+
+react https://dev.to/markliu2013/top-6-react-hook-mistakes-beginners-make-1135?ref=dailydev
+
+
+//api design https://levelup.gitconnected.com/api-design-101-from-basics-to-best-practices-a0261cdf8886
+
+
+//react pattern https://baguilar6174.medium.com/react-design-patterns-6ab55c5ebafb

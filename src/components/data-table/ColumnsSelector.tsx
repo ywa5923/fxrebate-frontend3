@@ -7,7 +7,7 @@ import {ColumnDef} from "@tanstack/react-table";
 import { Button } from "@/components/ui/button"
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { ScrollArea } from "@/components/ui/scroll-area"
-
+import { DataTableViewOptionsProps } from "./TopTable"
 
 import {
   DropdownMenu,
@@ -17,9 +17,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 
-interface DataTableViewOptionsProps<TData> {
-  table: Table<TData>
-}
+
 
 export default function ColumnsSelector<TData>({
   table,

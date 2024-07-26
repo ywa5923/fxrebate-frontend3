@@ -86,9 +86,7 @@ export default function ColumnsSelector<TData>({
                   checked={checkedValue}
                   onSelect={(e) => {
                     e.preventDefault()
-
-                    console.log(e.target);
-                    
+  
                 
                 }}
                   onCheckedChange={(value) => {

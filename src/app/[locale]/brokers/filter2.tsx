@@ -1,4 +1,4 @@
-"use client";
+
 import {
   Cloud,
   CreditCard,
@@ -16,8 +16,12 @@ import {
   Users,
 } from "lucide-react";
 
+import { useEffect, useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,6 +43,8 @@ import SingleSelect from "./SingleSelect";
 import MultiSelect from "./ManySelect";
 
 export function FilterBrokers2() {
+
+
   let filters = [
     {
       field: "rating",
@@ -165,6 +171,50 @@ export function FilterBrokers2() {
       ],
     },
   ];
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const params = new URLSearchParams(searchParams);
+  const { replace } = useRouter();
+   let [radioFilters,setRadiofilters]=useState({})
+   let [checkboxFilters,setCheckboxfilters]=useState({})
+
+   useEffect(()=>{
+      filters.forEach((filter)=>{
+        if(params.get(filter.field) && filter.type=="radio"){
+          handleRadio(filter.field,params.get(filter.field),"radio")
+        }
+      })
+
+   },[])
+   console.log("search params", params.get("payments"))
+   let handleRadio=(field:string, value:any,mode?:string)=>{
+    if (value) {
+      setRadiofilters({...radioFilters,[field]:value})
+      params.set(field, value);
+    } else {
+      params.delete(field);
+    }
+  
+     mode ?? replace(`${pathname}?${params.toString()}`);
+   }
+
+   let handleCheckbox=(field:string,option:string,value:any)=>{
+    if(Array.isArray(checkboxFilters[field]) && checkboxFilters[field].includes(option)){
+      setCheckboxfilters({...checkboxFilters,[field]:checkboxFilters[field].filter((o)=>o!=option)})
+    }else
+    if(checkboxFilters[field]){
+      setCheckboxfilters({...checkboxFilters,[field]:[...checkboxFilters[field],option]})
+      
+    }else{
+      setCheckboxfilters({...checkboxFilters,[field]:[option]})
+     
+    }
+    //params.set(field,checkboxFilters[field]?checkboxFilters[field].join(","))
+   
+       console.log("checkbossssss",field,option,value)
+       console.log(checkboxFilters)
+   }
+
   return (
     <>
       <DropdownMenu>
@@ -189,9 +239,9 @@ export function FilterBrokers2() {
                   <DropdownMenuPortal>
                     <DropdownMenuSubContent>
                       {filter.type === "checkbox" ? (
-                        <MultiSelect options={filter.options} />
+                        <MultiSelect onClick={handleCheckbox} field={filter.field} options={filter.options} checkedColumns={checkboxFilters[filter.field]} />
                       ) : (
-                        <SingleSelect options={filter.options} />
+                        <SingleSelect onClick={handleRadio} field={filter.field} options={filter.options} defaultValue={radioFilters[filter.field]} />
                       )}
                     </DropdownMenuSubContent>
                   </DropdownMenuPortal>

@@ -180,13 +180,22 @@ export function FilterBrokers2() {
 
    useEffect(()=>{
       filters.forEach((filter)=>{
-        if(params.get(filter.field) && filter.type=="radio"){
-          handleRadio(filter.field,params.get(filter.field),"radio")
+        if(params.get(filter.field) ){
+          if(filter.type=="radio"){
+            handleRadio(filter.field,params.get(filter.field),"radio")
+          }else if(filter.type=="checkbox"){
+           setCheckboxfilters({...checkboxFilters,[filter.field]:params.get(filter.field)?.split(",")})
+            
+          }
+          
         }
       })
 
+     
+
+      
    },[])
-   console.log("search params", params.get("payments"))
+ //  console.log("search params", params.get("payments"))
    let handleRadio=(field:string, value:any,mode?:string)=>{
     if (value) {
       setRadiofilters({...radioFilters,[field]:value})
@@ -198,10 +207,10 @@ export function FilterBrokers2() {
      mode ?? replace(`${pathname}?${params.toString()}`);
    }
 
-   let handleCheckbox=(field:string,option:string,value:any)=>{
+   let handleCheckbox=(field:string,option:string,value:any,mode?:string)=>{
     if(Array.isArray(checkboxFilters[field]) && checkboxFilters[field].includes(option)){
       setCheckboxfilters({...checkboxFilters,[field]:checkboxFilters[field].filter((o)=>o!=option)})
-    }else
+    }else{
     if(checkboxFilters[field]){
       setCheckboxfilters({...checkboxFilters,[field]:[...checkboxFilters[field],option]})
       
@@ -209,10 +218,30 @@ export function FilterBrokers2() {
       setCheckboxfilters({...checkboxFilters,[field]:[option]})
      
     }
-    //params.set(field,checkboxFilters[field]?checkboxFilters[field].join(","))
+    
+  }
+ 
+  let oldParam=params.get(field);
+  let oldParams:any[]=[];
+  
+  if(oldParam){
+     oldParams=oldParam.split(",");
+    if(oldParams.includes(option)){
+      oldParams=oldParams.filter((o)=>o!=option);
+    }else{
+      oldParams=[...oldParams,option]
+    }
    
-       console.log("checkbossssss",field,option,value)
-       console.log(checkboxFilters)
+  }else{
+    oldParams=[option]
+  }
+ 
+  params.set(field,oldParams.join(","))
+ mode??replace(`${pathname}?${params.toString()}`, {scroll:false});
+ 
+ // checkboxFilters[field]??params.set(field,checkboxFilters[field].join(","))
+       //console.log("checkbossssss",field,option,value)
+//console.log(checkboxFilters)
    }
 
   return (

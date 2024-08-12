@@ -55,8 +55,39 @@ async function getData(): Promise<any[]> {
   ];
 }
 
-export default async function BrokerPage() {
-  const data = await getData();
+
+
+export default  async function BrokerPage({
+  searchParams,
+  
+}: {
+  searchParams?: any;
+  
+}) {
+  //const data =  await getData();
+  console.log("search params columns",searchParams.columns)
+
+  //const dynamicData = await fetch(`http://localhost:8000/api/v1/brokers?language[eq]=eng&page=1`, { cache: 'no-store' })
+ // const brokers = await dynamicData.json()
+
+  const brokers=await getBrokers(searchParams.columns);
+  //const data =await getBrokers();
+
+  //const newBrokers={...brokers.data[0],['dynamic_options_value']:null}
+
+  const brokers2=brokers.data.map((broker:any)=>{
+        //const newBroker= {...broker,['dynamic_options_values']:null}
+        const newBroker=(({ dynamic_options_values, ...o }) => o)(broker)
+
+        broker.dynamic_options_values.forEach((d:any)=>{
+          newBroker[d.option_slug]=d.value
+        })
+        return newBroker;
+  })
+
+  console.log(brokers2[0])
+  
+  const data=brokers2
 
   return (
     <>
@@ -253,4 +284,21 @@ export default async function BrokerPage() {
       </Layout>
     </>
   );
+}
+//scroll bug fixed https://github.com/shadcn-ui/ui/issues/1355
+
+ async function getBrokers(brokerColumns:string|null=null) {
+  //position_home,position_list,trading_fees,short_payment_options,trailing_stops
+  let url=(brokerColumns)?`http://localhost:8000/api/v1/brokers?language[eq]=ro&page=1&columns[in]=${brokerColumns}`:`http://localhost:8000/api/v1/brokers?language[eq]=ro&page=1&columns[in]=position_home`
+
+  console.log("urlul pizdii este",url)
+  //`http://localhost:8000/api/v1/brokers?language[eq]=ro&page=1&columns[in]=position_home`+brokerColumns+
+   // `&filters[in]=a,b,c,d`
+ 
+  const res = await fetch(url,{cache: 'no-store'})
+  //short_payment_options,trading_fees,trailing_stops
+
+  const brokers = await res.json()
+  console.log("brokeryyyyy",brokers.data[0])
+  return brokers;
 }

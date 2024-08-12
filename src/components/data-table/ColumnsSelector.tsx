@@ -24,8 +24,8 @@ export default function ColumnsSelector<TData>({
 }: DataTableViewOptionsProps<TData>) {
 
     //let brokerColumns=["id","amount","status","email","address","rating"]
-    let brokerColumns=["id","amount","status","email","address","rating","id","amount","status","email","address","rating","id","amount","status","email","address","rating","id","amount","status","email","address","rating","id","amount","status","email","address","rating","id","amount","status","email","address","rating","MUIE"]
-
+    //position_home,position_list,trading_fees,short_payment_options,trailing_stops
+    let brokerColumns=["position_home","position_list","short_payment_options","trailing_stops","regulation","trading_fees","trustpilot_ranking","jurisdictions"];
     const [checkedColumns,setCheckedColumns]=useState([])
     const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -50,6 +50,8 @@ export default function ColumnsSelector<TData>({
         (column) =>
           typeof column.accessorFn !== "undefined" && column.getCanHide()
       );
+
+      console.log("table columns",tableColumns);
    
   return (
     <>

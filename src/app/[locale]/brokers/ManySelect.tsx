@@ -21,23 +21,32 @@ const MultiSelect = ({
   checkedColumns:[]
 }) => {
   //const [checkedColumns, setCheckedColumns] = React.useState([]);
+ 
 
   return (
     <>
       <ScrollArea className="h-[300px]  rounded-md border ">
         {options.map((op, key) => {
-          // let option = checkedColumns.find((c) => c.option === op.name);
-          // let checkedValue = option ? option.checked : false;
+
+         
+           let isChecked = checkedColumns?.find((c) => c === op.value);
+           let checkedValue = isChecked ? true : false;
+          // let isChecked:boolean;
+          // if(checkedColumns.includes(op.value)){
+          //    isChecked=true
+          // }else{
+          //   isChecked=false
+          // }
 
           return (
             <DropdownMenuCheckboxItem
               key={key}
               className="capitalize"
-              //checked={checkedValue}
+              checked={checkedValue}
               onSelect={(e) => {
                 e.preventDefault();
               }}
-              onCheckedChange={(value) => {
+              onCheckedChange={(checked) => {
                 // setCheckedColumns((prev) => {
                 //   let found = prev.find((item, index) => {
                 //     if (item.option === op.name) {
@@ -54,7 +63,7 @@ const MultiSelect = ({
                 //   }
                 // });
 
-               onClick(field,op.name,value)
+               onClick(field,op.value,checked)
               }}
             >
               {op.name}

@@ -57,38 +57,27 @@ async function getData(): Promise<any[]> {
 
 
 
-export default  async function BrokerPage({
+export default async function BrokerPage({
   searchParams,
-  
+  params: { locale }
+
 }: {
   searchParams?: any;
-  
+  params?:any
+
 }) {
-  //const data =  await getData();
-  console.log("search params columns",searchParams.columns)
 
-  //const dynamicData = await fetch(`http://localhost:8000/api/v1/brokers?language[eq]=eng&page=1`, { cache: 'no-store' })
- // const brokers = await dynamicData.json()
-
-  const brokers=await getBrokers(searchParams.columns);
-  //const data =await getBrokers();
-
-  //const newBrokers={...brokers.data[0],['dynamic_options_value']:null}
-
-  const brokers2=brokers.data.map((broker:any)=>{
-        //const newBroker= {...broker,['dynamic_options_values']:null}
-        const newBroker=(({ dynamic_options_values, ...o }) => o)(broker)
-
-        broker.dynamic_options_values.forEach((d:any)=>{
-          newBroker[d.option_slug]=d.value
-        })
-        return newBroker;
-  })
-
-  console.log(brokers2[0])
   
-  const data=brokers2
 
+  const data = await getBrokers(searchParams.columns,locale,searchParams.page,searchParams.sortBy,searchParams.sortOrder)
+ const dynamicColumns= await translateBrokerDynamicColumns(locale)
+ const staticColumns= await translateBrokerStaticColumns(locale)
+
+
+ const columns={...staticColumns,...dynamicColumns}
+ console.log(dynamicColumns)
+
+//console.log(data)
   return (
     <>
       <Layout headerStyle={1} footerStyle={1}>
@@ -121,7 +110,7 @@ export default  async function BrokerPage({
                     </p>
 
                     <div className="container mx-auto py-10">
-                      <AutoTable data={data} />
+                      <AutoTable data={data} columnNames={columns}/>
                       <Pagination totalPages={15} />
                     </div>
                     <div className="theme-border" />
@@ -287,18 +276,52 @@ export default  async function BrokerPage({
 }
 //scroll bug fixed https://github.com/shadcn-ui/ui/issues/1355
 
- async function getBrokers(brokerColumns:string|null=null) {
+async function getBrokers(brokerColumns: string | null = null,locale:string,page:number=1,sortBy?:string,sortOrder?:string) {
   //position_home,position_list,trading_fees,short_payment_options,trailing_stops
-  let url=(brokerColumns)?`http://localhost:8000/api/v1/brokers?language[eq]=ro&page=1&columns[in]=${brokerColumns}`:`http://localhost:8000/api/v1/brokers?language[eq]=ro&page=1&columns[in]=position_home`
-
-  console.log("urlul pizdii este",url)
+  let url = (brokerColumns) ? `http://localhost:8000/api/v1/brokers?language[eq]=${locale}&page=${page}&columns[in]=${brokerColumns}` : `http://localhost:8000/api/v1/brokers?language[eq]=${locale}&page=${page}`
+  
+   let sortDirection=(sortOrder==="asc")?"+":"-"
+  if(sortBy && sortOrder) url=url+`&order_by[eq]=`+sortDirection+`${sortBy}`
+  
+  console.log("url=========================",url);
   //`http://localhost:8000/api/v1/brokers?language[eq]=ro&page=1&columns[in]=position_home`+brokerColumns+
-   // `&filters[in]=a,b,c,d`
- 
-  const res = await fetch(url,{cache: 'no-store'})
+  // `&filters[in]=a,b,c,d`
+
+  const res = await fetch(url, { cache: 'no-store' })
   //short_payment_options,trading_fees,trailing_stops
 
   const brokers = await res.json()
-  console.log("brokeryyyyy",brokers.data[0])
-  return brokers;
+
+  return brokers.data.map((broker: any) => {
+
+    //remove dynamic_options_values from broker
+    //const newBroker= {...broker,['dynamic_options_values']:null}
+    const newBroker = (({ dynamic_options_values, ...o }) => o)(broker)
+    //add dynamic_options_values to broker as key:value pairs
+    broker.dynamic_options_values.forEach((d: any) => {
+      newBroker[d.option_slug] = d.value
+    })
+    return newBroker;
+  })
+
+}
+
+async function translateBrokerDynamicColumns(locale:string)
+{
+  let url= `http://localhost:8000/api/v1/broker_options?language[eq]=${locale}`;
+  const res = await fetch(url, { cache: 'no-store' })
+  //short_payment_options,trading_fees,trailing_stops
+  const dynamicColumns = await res.json()
+  //merge an array of objects into one
+  let mergedObjects=Object.assign({},...dynamicColumns.data)
+  return mergedObjects;
+}
+
+async function translateBrokerStaticColumns(locale:string){
+  let url= `http://localhost:8000/api/v1/translations?model[eq]=Broker&property[in]=column_names&lang[eq]=${locale}`;
+  
+  const res = await fetch(url, { cache: 'no-store' })
+  //short_payment_options,trading_fees,trailing_stops
+  const staticColumns = await res.json()
+ return JSON.parse(staticColumns.data[0].metadata)
 }

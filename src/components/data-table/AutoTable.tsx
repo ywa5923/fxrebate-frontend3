@@ -28,14 +28,16 @@ import {
 
 
 interface DataTableProps<TData, TValue> {
-  data: TData[]
+  data: TData[],
+  columnNames:Record<string,string>
 }
 //  columns: ColumnDef<TData, TValue>[]
 export function AutoTable<TData, TValue>({
-  data
+  data,
+  columnNames
 }: DataTableProps<TData, TValue>) {
 
-  let sortableKeys:Array<string>=["amount","email"];
+  let sortableKeys:Array<string>=Object.keys(columnNames);
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -57,13 +59,13 @@ export function AutoTable<TData, TValue>({
                     replace(`${pathname}?${params.toString()}`);
                   }}
                 >
-                  {key}
+                  {columnNames[key]?columnNames[key]:key}
                   <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
               )
             }else{
               return (
-                <>{key}</>
+                <>{columnNames[key]?columnNames[key]:key}</>
               )
             }
             
@@ -74,7 +76,7 @@ export function AutoTable<TData, TValue>({
   const [sorting, setSorting] = React.useState<SortingState>([])
 
   useEffect(()=>{
-    console.log("sorting",sorting)
+   // console.log("sorting",sorting)
   },[sorting])
 
   
@@ -91,7 +93,7 @@ export function AutoTable<TData, TValue>({
 
   return (
     <>
-    <TopTable table={table} />
+    <TopTable table={table} columnNames={columnNames} />
     <div className="rounded-md border">
      
       <Table>

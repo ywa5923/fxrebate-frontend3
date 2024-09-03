@@ -21,37 +21,48 @@ import {
 
 export default function ColumnsSelector<TData>({
   table,
-}: DataTableViewOptionsProps<TData>) {
+  columnNames
+}: {
+  table: Table<TData>,
+  columnNames:Record<string,string>
+}) {
 
-    //let brokerColumns=["id","amount","status","email","address","rating"]
-    //position_home,position_list,trading_fees,short_payment_options,trailing_stops
-    let brokerColumns=["position_home","position_list","short_payment_options","trailing_stops","regulation","trading_fees","trustpilot_ranking","jurisdictions"];
-    const [checkedColumns,setCheckedColumns]=useState([])
-    const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const { replace } = useRouter();
+   let staticColumns=['home_url','user_rating','account_type','trading_name','overall_rating','support_options','account_currencies','trading_instruments'];
+  
+   let brokerColumns=Object.keys( columnNames)
+   const [checkedColumns,setCheckedColumns]=useState(staticColumns)
+   const searchParams = useSearchParams();
+   const pathname = usePathname();
+   const { replace } = useRouter();
    
     useEffect(()=>{
-      console.log("checked columns",checkedColumns)
+     // console.log("checked columns",checkedColumns)
       const params = new URLSearchParams(searchParams);
-      let cols=[];
-      checkedColumns.forEach(element => {
-        if(element.checked){
-          cols.push(element.column)
-        }
-      });
-     params.set("columns",cols.toString())
+     // console.log("==============",params.get("columns"))
+      params.set("columns",checkedColumns.toString())
+      if(checkedColumns.toString()==staticColumns.toString() || checkedColumns.length==0 ){
+        params.delete("columns")
+      }
       replace(`${pathname}?${params.toString()}`);
+     
+    
     },[checkedColumns])
 
-    let tableColumns:ColumnDef<TData>[]=table
-      .getAllColumns()
-      .filter(
-        (column) =>
-          typeof column.accessorFn !== "undefined" && column.getCanHide()
-      );
+    useEffect(()=>{
+      const params = new URLSearchParams(searchParams);
+     let columns=params.get("columns")
+     if(columns){
+      setCheckedColumns(columns.split(","))
+     }
+    },[])
+    // let tableColumns:ColumnDef<TData>[]=table
+    //   .getAllColumns()
+    //   .filter(
+    //     (column) =>
+    //       typeof column.accessorFn !== "undefined" && column.getCanHide()
+    //   );
 
-      console.log("table columns",tableColumns);
+   //console.log("table columns",tableColumns);
    
   return (
     <>
@@ -77,9 +88,9 @@ export default function ColumnsSelector<TData>({
         <ScrollArea className="h-[300px]  rounded-md border ">
         {brokerColumns.map((brokerColumn,index)=>{
 
-            let isChecked=tableColumns.find((column)=>column.id===brokerColumn)?true:false
-            let col=checkedColumns.find((c)=>c.column===brokerColumn)
-            let checkedValue=col?col.checked:false
+           // let isChecked=tableColumns.find((column)=>column.id===brokerColumn)?true:false
+            let col=checkedColumns.find((c)=>c===brokerColumn)
+            let checkedValue=col?true:false
             
             return (
                 <DropdownMenuCheckboxItem
@@ -94,28 +105,26 @@ export default function ColumnsSelector<TData>({
                   onCheckedChange={(value) => {
                   
                       setCheckedColumns((prev)=>{
+                        
                         let found=prev.find((item,index)=>{
-                          if(item.column===brokerColumn){
-                          
-                            prev[index]={column:brokerColumn,checked:value};
-                           
+                          if(item===brokerColumn){
+                            prev.splice(index,1)
                             return true
                           }
                         })
-
-                        if(found){
-                          return [...prev]
-                        }else{
-                          return [...prev,{column:brokerColumn,checked:value}]
+                        //if unchecked all columns, get default static colums and mark them as selected
+                        if(prev.length==0){
+                          prev=staticColumns;
                         }
-
-                      
+                    
+                        return (found)?[...prev]:[...prev,brokerColumn]
+                
                       });
-                   //  return column.toggleVisibility(!!value)
+            
                   
                   }}
                 >
-                  {brokerColumn}
+                  {columnNames[brokerColumn]}
                 </DropdownMenuCheckboxItem>
               )
         })}

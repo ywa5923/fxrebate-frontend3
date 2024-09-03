@@ -9,14 +9,18 @@ export interface DataTableViewOptionsProps<TData> {
 
 export default function TopTable<TData>({
   table,
-}: DataTableViewOptionsProps<TData>) {
+  columnNames,
+}: {
+  table:Table<TData>,
+  columnNames:Record<string,string>
+}) {
   return (
     <>
       <div className="w-full">
         <div className="flex  items-center py-2">
           <SearchTable />
           <FilterBrokers2 />
-          <ColumnsSelector table={table} />
+          <ColumnsSelector table={table} columnNames={columnNames} />
         </div>
       </div>
     </>

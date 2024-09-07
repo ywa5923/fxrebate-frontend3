@@ -72,6 +72,7 @@ export default async function BrokerPage({
   const data = await getBrokers(searchParams.columns,locale,searchParams.page,searchParams.sortBy,searchParams.sortOrder)
  const dynamicColumns= await translateBrokerDynamicColumns(locale)
  const staticColumns= await translateBrokerStaticColumns(locale)
+ const filters=await getFilters(locale)
 
 
  const columns={...staticColumns,...dynamicColumns}
@@ -110,7 +111,7 @@ export default async function BrokerPage({
                     </p>
 
                     <div className="container mx-auto py-10">
-                      <AutoTable data={data} columnNames={columns}/>
+                      <AutoTable data={data} columnNames={columns} filters={filters}/>
                       <Pagination totalPages={15} />
                     </div>
                     <div className="theme-border" />
@@ -292,15 +293,25 @@ async function getBrokers(brokerColumns: string | null = null,locale:string,page
 
   const brokers = await res.json()
 
+  let selectedColumns=(brokerColumns)?brokerColumns.split(","):['home_url','user_rating','account_type','trading_name','overall_rating','support_options','account_currencies','trading_instruments'];
   return brokers.data.map((broker: any) => {
 
     //remove dynamic_options_values from broker
     //const newBroker= {...broker,['dynamic_options_values']:null}
     const newBroker = (({ dynamic_options_values, ...o }) => o)(broker)
-    //add dynamic_options_values to broker as key:value pairs
+    // //add dynamic_options_values to broker as key:value pairs
     broker.dynamic_options_values.forEach((d: any) => {
       newBroker[d.option_slug] = d.value
     })
+
+    //remove broker;s columns that are not in brokerColumns
+   
+      Object.keys(newBroker).forEach((key)=>{
+        if(!selectedColumns.includes(key)){
+          delete newBroker[key]
+        }
+      })
+    
     return newBroker;
   })
 
@@ -325,3 +336,14 @@ async function translateBrokerStaticColumns(locale:string){
   const staticColumns = await res.json()
  return JSON.parse(staticColumns.data[0].metadata)
 }
+
+async function getFilters(locale:string)
+{
+  let url=`http://localhost:8000/api/v1/broker-filters?language[eq]=ro`
+  const res = await fetch(url, { cache: 'no-store' })
+  const filters=await res.json()
+
+  return filters;
+
+}
+//backend tested with http://localhost:8000/api/v1/brokers?language[eq]=ro&page=1&columns[in]=trading_name,trading_fees,account_type,jurisdictions,promotion_title,fixed_spreads,support_options&order_by[eq]=+account_type

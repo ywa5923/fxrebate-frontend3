@@ -29,12 +29,14 @@ import {
 
 interface DataTableProps<TData, TValue> {
   data: TData[],
-  columnNames:Record<string,string>
+  columnNames:Record<string,string>,
+  filters?:any
 }
 //  columns: ColumnDef<TData, TValue>[]
 export function AutoTable<TData, TValue>({
   data,
-  columnNames
+  columnNames,
+  filters
 }: DataTableProps<TData, TValue>) {
 
   let sortableKeys:Array<string>=Object.keys(columnNames);
@@ -56,6 +58,7 @@ export function AutoTable<TData, TValue>({
 
                     params.set('sortBy', key);
                     params.set('sortOrder', (column.getIsSorted() === "asc")?"desc":"asc");
+                    params.delete("page");
                     replace(`${pathname}?${params.toString()}`);
                   }}
                 >
@@ -93,7 +96,7 @@ export function AutoTable<TData, TValue>({
 
   return (
     <>
-    <TopTable table={table} columnNames={columnNames} />
+    <TopTable table={table} columnNames={columnNames} filters={filters}/>
     <div className="rounded-md border">
      
       <Table>

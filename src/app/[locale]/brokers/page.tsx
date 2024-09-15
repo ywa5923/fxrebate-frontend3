@@ -5,56 +5,7 @@ import Link from "next/link";
 import { AutoTable } from "@/components/data-table/AutoTable";
 import Pagination from "@/components/elements/Pagination";
 import { FilterBrokers2 } from "./filter2";
-
-async function getData(): Promise<any[]> {
-  // Fetch data from your API here.
-  return [
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-      // address:"Address3"
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-      //address:"Address2"
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-      //address:"Address1"
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-      //address:"Address1"
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-      //address:"Address1"
-    },
-    {
-      id: "728ed52f",
-      amount: 100,
-      status: "pending",
-      email: "m@example.com",
-      //address:"Address1"
-    },
-    // ...
-  ];
-}
-
+import { json } from "stream/consumers";
 
 
 export default async function BrokerPage({
@@ -71,14 +22,15 @@ export default async function BrokerPage({
 
   const data = await getBrokers(searchParams.columns,locale,searchParams.page,searchParams.sortBy,searchParams.sortOrder)
  const dynamicColumns= await translateBrokerDynamicColumns(locale)
- const staticColumns= await translateBrokerStaticColumns(locale)
- const filters=await getFilters(locale)
+ const {filters,broker_static_columns,broker_ext_columns}= await translateBrokerPage(locale)
+ let filter_options=await getFilters(locale)
+
+ //add filter's name property to filters object array
+ filter_options=filter_options.map((obj:any)=>({...obj,name:filters[obj.field]}))
 
 
- const columns={...staticColumns,...dynamicColumns}
- console.log(dynamicColumns)
-
-//console.log(data)
+ const columns={...broker_static_columns,...broker_ext_columns,...dynamicColumns}
+ 
   return (
     <>
       <Layout headerStyle={1} footerStyle={1}>
@@ -111,7 +63,7 @@ export default async function BrokerPage({
                     </p>
 
                     <div className="container mx-auto py-10">
-                      <AutoTable data={data} columnNames={columns} filters={filters}/>
+                      <AutoTable data={data} columnNames={columns} filters={filter_options} />
                       <Pagination totalPages={15} />
                     </div>
                     <div className="theme-border" />
@@ -293,6 +245,8 @@ async function getBrokers(brokerColumns: string | null = null,locale:string,page
 
   const brokers = await res.json()
 
+  
+
   let selectedColumns=(brokerColumns)?brokerColumns.split(","):['home_url','user_rating','account_type','trading_name','overall_rating','support_options','account_currencies','trading_instruments'];
   return brokers.data.map((broker: any) => {
 
@@ -303,6 +257,31 @@ async function getBrokers(brokerColumns: string | null = null,locale:string,page
     broker.dynamic_options_values.forEach((d: any) => {
       newBroker[d.option_slug] = d.value
     })
+
+    //add companiy's offices to broker
+    
+  //  let offices:string[]=[]
+  //  let headquarters:string[]=[]
+  //  broker.companies.forEach((company:any)=>{
+  //   offices.push(company.offices)
+  //   headquarters.push(company.headquarters)
+  //   })
+
+  if(broker.regulators){
+    let regulators:string[]=[]
+    broker.regulators.forEach((regulator:any)=>{
+      regulators.push(regulator.abreviation+"-"+regulator.country)
+      //regulators.push(regulator.abreviation)
+    })
+    //newBroker["regulators"]=regulators.join(", \n")
+    newBroker["regulators"] = regulators.join("; ");
+  }
+    
+  //   newBroker["offices"]=offices.join(",")
+  //   newBroker["headquarters"]=headquarters.join(",")
+  //   newBroker["regulators"]=regulators.join(",")
+   
+
 
     //remove broker;s columns that are not in brokerColumns
    
@@ -328,18 +307,19 @@ async function translateBrokerDynamicColumns(locale:string)
   return mergedObjects;
 }
 
-async function translateBrokerStaticColumns(locale:string){
-  let url= `http://localhost:8000/api/v1/translations?model[eq]=Broker&property[in]=column_names&lang[eq]=${locale}`;
+async function translateBrokerPage(locale:string){
+  let url= `http://localhost:8000/api/v1/translations?model[eq]=Broker&property[eq]=page_brokers&lang[eq]=${locale}`;
   
   const res = await fetch(url, { cache: 'no-store' })
   //short_payment_options,trading_fees,trailing_stops
-  const staticColumns = await res.json()
- return JSON.parse(staticColumns.data[0].metadata)
+  const serverResponse = await res.json()
+  return JSON.parse(serverResponse.data[0].metadata)
+ 
 }
 
 async function getFilters(locale:string)
 {
-  let url=`http://localhost:8000/api/v1/broker-filters?language[eq]=ro`
+  let url=`http://localhost:8000/api/v1/broker-filters?language[eq]=${locale}`
   const res = await fetch(url, { cache: 'no-store' })
   const filters=await res.json()
 

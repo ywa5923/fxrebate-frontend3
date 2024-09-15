@@ -45,132 +45,7 @@ import MultiSelect from "./ManySelect";
 export function FilterBrokers2({filters}:{filters?:any}) {
 
 
-  // let filters = [
-  //   {
-  //     field: "rating",
-  //     type: "checkbox",
-  //     options: [
-  //       {
-  //         name: "option1",
-  //         value: "value1",
-  //       },
-  //       {
-  //         name: "option2",
-  //         value: "value2",
-  //       },
-  //       {
-  //         name: "option3",
-  //         value: "value3",
-  //       },
-  //       {
-  //         name: "option4",
-  //         value: "value4",
-  //       },
-  //       {
-  //         name: "option5",
-  //         value: "value5",
-  //       },
-  //       {
-  //         name: "option6",
-  //         value: "value6",
-  //       },
-  //       {
-  //         name: "option7",
-  //         value: "value7",
-  //       },
-  //       {
-  //         name: "option8",
-  //         value: "value8",
-  //       },
-  //       {
-  //         name: "option9",
-  //         value: "value9",
-  //       },
-  //       {
-  //         name: "option10",
-  //         value: "value10",
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     field: "payments",
-  //     type: "radio",
-  //     options: [
-  //       {
-  //         name: "option1",
-  //         value: "value1",
-  //       },
-  //       {
-  //         name: "option2",
-  //         value: "value2",
-  //       },
-  //       {
-  //         name: "option3",
-  //         value: "value3",
-  //       },
-  //       {
-  //         name: "option8",
-  //         value: "value8",
-  //       },
-  //       {
-  //         name: "option9",
-  //         value: "value9",
-  //       },
-  //       {
-  //         name: "option10",
-  //         value: "value10",
-  //       },
-  //       {
-  //         name: "option11",
-  //         value: "value11",
-  //       },
-  //       {
-  //         name: "option12",
-  //         value: "value12",
-  //       },
-  //       {
-  //         name: "option13",
-  //         value: "value13",
-  //       },
-  //       {
-  //         name: "option15",
-  //         value: "value15",
-  //       },
-  //       {
-  //         name: "option16",
-  //         value: "value16",
-  //       },
-  //       {
-  //         name: "option17",
-  //         value: "value17",
-  //       },
-  //       {
-  //         name: "option18",
-  //         value: "value18",
-  //       },
-  //       {
-  //         name: "option19",
-  //         value: "value19",
-  //       },
-  //       {
-  //         name: "option4",
-  //         value: "value4",
-  //       },
-  //       {
-  //         name: "option5",
-  //         value: "value5",
-  //       },
-  //       {
-  //         name: "option6",
-  //         value: "value6",
-  //       },
-  //       {
-  //         name: "option7",
-  //         value: "value7",
-  //       },
-  //     ],
-  //   },
-  // ];
+  
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const params = new URLSearchParams(searchParams);
@@ -185,9 +60,7 @@ export function FilterBrokers2({filters}:{filters?:any}) {
             handleRadio(filter.field,params.get(filter.field),"radio")
           }else if(filter.type=="checkbox"){
            setCheckboxfilters({...checkboxFilters,[filter.field]:params.get(filter.field)?.split(",")})
-            
           }
-          
         }
       })
 
@@ -263,7 +136,7 @@ export function FilterBrokers2({filters}:{filters?:any}) {
               return (
                 <DropdownMenuSub key={index}>
                   <DropdownMenuSubTrigger>
-                    <span>{filter.field}</span>
+                    <span>{filter.name}</span>
                   </DropdownMenuSubTrigger>
                   <DropdownMenuPortal>
                     <DropdownMenuSubContent>

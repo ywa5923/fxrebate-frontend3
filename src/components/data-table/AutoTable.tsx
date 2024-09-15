@@ -5,6 +5,7 @@ import TopTable from "./TopTable"
 import { ArrowUpDown} from "lucide-react"
 import {Button} from "@/components/ui/button"
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import Link from "next/link"
 
 import {
   ColumnDef,
@@ -125,11 +126,18 @@ export function AutoTable<TData, TValue>({
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="text-center">
+                {row.getVisibleCells().map((cell) => {
+                
+                 if(cell.column.columnDef.accessorKey=="trading_name"){
+                  const [name, url] = cell.getValue().split("**##**");
+                  return (<TableCell key={cell.id} className="text-center"> {flexRender(<Link href={url as string } target="_blank">{name}</Link>,cell.getContext())}</TableCell>)
+                 }
+                  return (<TableCell key={cell.id} className="text-center">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+                   </TableCell>)
+                 
+                  
+})}
               </TableRow>
             ))
           ) : (

@@ -45,7 +45,14 @@ export function AutoTable<TData, TValue>({
   const pathname = usePathname();
   const { replace } = useRouter();
 
-   let columns:ColumnDef<TData>[]= Object.keys(data[0] as {}).map((key:string):ColumnDef<TData>=>{
+  useEffect(()=>{
+    
+  },[])
+
+  const params = new URLSearchParams(searchParams);
+   let columnsURL=params.get("columns")
+   let tableColumns=(columnsURL)?columnsURL.split(","):Object.keys(data[0] as {})
+   let columns:ColumnDef<TData>[]= tableColumns.map((key:string):ColumnDef<TData>=>{
         return {
           accessorKey: key,
           header: ({ column }) => {
@@ -129,8 +136,9 @@ export function AutoTable<TData, TValue>({
                 {row.getVisibleCells().map((cell) => {
                 
                  if(cell.column.columnDef.accessorKey=="trading_name"){
-                  const [name, url] = cell.getValue().split("**##**");
-                  return (<TableCell key={cell.id} className="text-center"> {flexRender(<Link href={url as string } target="_blank">{name}</Link>,cell.getContext())}</TableCell>)
+                  //const [name, url] = cell.getValue().split("**##**");
+                  //<Link href={url as string } target="_blank">{name}</Link>
+                  return (<TableCell key={cell.id} className="text-center"> {flexRender(cell.column.columnDef.cell,cell.getContext())}</TableCell>)
                  }
                   return (<TableCell key={cell.id} className="text-center">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

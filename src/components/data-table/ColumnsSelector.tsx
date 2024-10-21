@@ -27,10 +27,10 @@ export default function ColumnsSelector<TData>({
   columnNames:Record<string,string>
 }) {
 
-   let staticColumns=['home_url','user_rating','account_type','trading_name','overall_rating','support_options','account_currencies','trading_instruments'];
+   //let staticColumns=['home_url','user_rating','account_type','trading_name','overall_rating','support_options','account_currencies','trading_instruments'];
   
    let brokerColumns=Object.keys( columnNames)
-   const [checkedColumns,setCheckedColumns]=useState(staticColumns)
+   const [checkedColumns,setCheckedColumns]=useState([])
    const searchParams = useSearchParams();
    const pathname = usePathname();
    const { replace } = useRouter();
@@ -40,7 +40,7 @@ export default function ColumnsSelector<TData>({
       const params = new URLSearchParams(searchParams);
      // console.log("==============",params.get("columns"))
       params.set("columns",checkedColumns.toString())
-      if(checkedColumns.toString()==staticColumns.toString() || checkedColumns.length==0 ){
+      if( checkedColumns.length==0 ){
         params.delete("columns")
       }
       replace(`${pathname}?${params.toString()}`);
@@ -113,9 +113,9 @@ export default function ColumnsSelector<TData>({
                           }
                         })
                         //if unchecked all columns, get default static colums and mark them as selected
-                        if(prev.length==0){
-                          prev=staticColumns;
-                        }
+                        // if(prev.length==0){
+                        //   prev=staticColumns;
+                        // }
                     
                         return (found)?[...prev]:[...prev,brokerColumn]
                 

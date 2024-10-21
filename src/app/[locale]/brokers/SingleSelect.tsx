@@ -31,7 +31,7 @@ const SingleSelect = ({
                 onClick(field,null)
               }}
             >
-              {field}
+              {/*{field} Remove filter*/}
             </DropdownMenuRadioItem>
       <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
      

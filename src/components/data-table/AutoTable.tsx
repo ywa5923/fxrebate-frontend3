@@ -31,13 +31,15 @@ import {
 interface DataTableProps<TData, TValue> {
   data: TData[],
   columnNames:Record<string,string>,
-  filters?:any
+  filters?:any,
+  defaultLoadedColumns?:Array<string>
 }
 //  columns: ColumnDef<TData, TValue>[]
 export function AutoTable<TData, TValue>({
   data,
   columnNames,
-  filters
+  filters,
+  defaultLoadedColumns
 }: DataTableProps<TData, TValue>) {
 
   let sortableKeys:Array<string>=Object.keys(columnNames);
@@ -104,7 +106,7 @@ export function AutoTable<TData, TValue>({
 
   return (
     <>
-    <TopTable table={table} columnNames={columnNames} filters={filters}/>
+    <TopTable table={table} columnNames={columnNames} filters={filters} defaultLoadedColumns={defaultLoadedColumns}/>
     <div className="rounded-md border">
      
       <Table>

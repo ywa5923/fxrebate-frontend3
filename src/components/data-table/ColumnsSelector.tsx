@@ -1,5 +1,5 @@
 "use client"
-import {useEffect, useState} from "react"
+import {useEffect, useState,useRef} from "react"
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
 import { MixerHorizontalIcon } from "@radix-ui/react-icons"
 import { Table } from "@tanstack/react-table"
@@ -21,30 +21,45 @@ import {
 
 export default function ColumnsSelector<TData>({
   table,
-  columnNames
+  columnNames,
+  defaultLoadedColumns
 }: {
   table: Table<TData>,
-  columnNames:Record<string,string>
+  columnNames:Record<string,string>,
+  defaultLoadedColumns?:Array<string>
 }) {
 
    //let staticColumns=['home_url','user_rating','account_type','trading_name','overall_rating','support_options','account_currencies','trading_instruments'];
+   let staticColumns=Object.keys(defaultLoadedColumns)
   
    let brokerColumns=Object.keys( columnNames)
-   const [checkedColumns,setCheckedColumns]=useState([])
+   const [checkedColumns,setCheckedColumns]=useState(staticColumns)
    const searchParams = useSearchParams();
    const pathname = usePathname();
    const { replace } = useRouter();
    
+   const [firstRender, setFirstRender] = useState(true);
+  
+
     useEffect(()=>{
-     // console.log("checked columns",checkedColumns)
+     
+      if (firstRender) {
+        setFirstRender(false);
+        return;
+      }
+
       const params = new URLSearchParams(searchParams);
-     // console.log("==============",params.get("columns"))
-      params.set("columns",checkedColumns.toString())
+      let columns=params.get("columns");
+     
       if( checkedColumns.length==0 ){
         params.delete("columns")
+
+      }else{
+        params.set("columns",checkedColumns.toString())
+     
       }
       replace(`${pathname}?${params.toString()}`);
-     
+        
     
     },[checkedColumns])
 
@@ -112,10 +127,11 @@ export default function ColumnsSelector<TData>({
                             return true
                           }
                         })
-                        //if unchecked all columns, get default static colums and mark them as selected
-                        // if(prev.length==0){
-                        //   prev=staticColumns;
-                        // }
+
+                       // if unchecked all columns, get default static colums and mark them as selected
+                        if(prev.length==0){
+                          prev=staticColumns;
+                        }
                     
                         return (found)?[...prev]:[...prev,brokerColumn]
                 

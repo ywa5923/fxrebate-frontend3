@@ -32,9 +32,11 @@ export default async function BrokerPage({
   let filter_options = await getFilters(locale);
 
  //console.log("filters",filter_options);
+ //console.log("filtersfffffffffffffffffffffffff",dynamicColumns);
 
   const columns = {
    // ...broker_static_columns,
+   ...defaultLoadedColumns,
   ...broker_ext_columns,
     ...dynamicColumns,
   };
@@ -75,6 +77,7 @@ export default async function BrokerPage({
                         data={data}
                         columnNames={columns}
                         filters={filter_options}
+                        defaultLoadedColumns={defaultLoadedColumns}
                       />
                       <Pagination totalPages={15} />
                     </div>

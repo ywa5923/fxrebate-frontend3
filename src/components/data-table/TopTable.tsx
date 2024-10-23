@@ -10,11 +10,13 @@ export interface DataTableViewOptionsProps<TData> {
 export default function TopTable<TData>({
   table,
   columnNames,
-  filters
+  filters,
+  defaultLoadedColumns
 }: {
   table:Table<TData>,
   columnNames:Record<string,string>,
-  filters?:any
+  filters?:any,
+  defaultLoadedColumns?:Array<string>
 }) {
   return (
     <>
@@ -22,7 +24,7 @@ export default function TopTable<TData>({
         <div className="flex  items-center py-2">
           <SearchTable />
           <FilterBrokers2 filters={filters}/>
-          <ColumnsSelector table={table} columnNames={columnNames} />
+          <ColumnsSelector table={table} columnNames={columnNames} defaultLoadedColumns={defaultLoadedColumns}/>
         </div>
       </div>
     </>

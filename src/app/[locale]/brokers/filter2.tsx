@@ -69,20 +69,20 @@ export function FilterBrokers2({ filters }: { filters?: any }) {
     setRadiofilters(urlRadioFilters);
     setCheckboxfilters(urlCheckedFilters);
   }, []);
-  // console.log("checkboxes",checkboxFilters)
-  console.log("radioFilters", radioFilters);
-  //  console.log("search params", params.get("payments"))
+
   let handleRadio = (
     field: string,
     optionValue: any,
     e: any,
     mode?: string
   ) => {
+    params.delete("page");
     if (optionValue == null) {
       //this is executed when reset is clicked
       const { [field]: _, ...rest } = radioFilters;
       setRadiofilters(rest);
       params.delete(field);
+     
 
       // mode ?? replace(`${pathname}?${params.toString()}`);
     } else {
@@ -99,6 +99,7 @@ export function FilterBrokers2({ filters }: { filters?: any }) {
     checked: boolean,
     mode?: string
   ) => {
+    params.delete("page");
     if (
       Array.isArray(checkboxFilters[field]) &&
       checkboxFilters[field].includes(optionValue)
@@ -147,17 +148,20 @@ export function FilterBrokers2({ filters }: { filters?: any }) {
 
   const resetFilters = () => {
     // Clear all filters
-     const params = new URLSearchParams();
-    // replace(`${pathname}?${params.toString()}`, { scroll: false });
+
+   
+   //params.keys() is an Iterator, get an array from it
+    const keys = Array.from(params.keys());
+    keys.forEach(key => {
+      if (key.startsWith('filter_')) {
+        params.delete(key);
+      }
+    });
     setCheckboxfilters({});
     setRadiofilters({});
-    params.forEach((value, key) => {
-      console.log("key",key)
-      if(key.startsWith("filter_"))
-        params.delete(key)
-    });
-    replace(`${pathname}?${params.toString()}`, { scroll: false });
-    // alert("reswet_filters");
+  
+   replace(`${pathname}?${params.toString()}`, { scroll: false });
+ 
   };
   return (
     <>
@@ -170,7 +174,7 @@ export function FilterBrokers2({ filters }: { filters?: any }) {
             Brokers Filters
           </Button>
         </DropdownMenuTrigger>
-
+        &nbsp;
         <Button
           style={{ color: "red" }}
           variant="outline"
@@ -186,10 +190,10 @@ export function FilterBrokers2({ filters }: { filters?: any }) {
             {filters.map((filter, index) => {
               let selectedFilters =
                 filter.type === "checkbox"
-                  ? checkboxFilters[filter.field]?.length
-                  : radioFilters[filter.field]
-                  ? 1
-                  : null;
+                  ? ((checkboxFilters[filter.field]?.length)?(checkboxFilters[filter.field]?.length):"")
+                  : (radioFilters[filter.field]? 1: null);
+                  
+                  
               return (
                 <DropdownMenuSub key={index}>
                   <DropdownMenuSubTrigger>

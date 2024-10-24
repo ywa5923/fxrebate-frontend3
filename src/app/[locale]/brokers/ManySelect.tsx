@@ -16,7 +16,7 @@ const MultiSelect = ({
   checkedColumns
 }: {
   options: [{ name: any; value: any }];
-  onClick:(field:string,option:string,e:any)=>void;
+  onClick:(field:string,optionValue:string,e:any)=>void;
   field:string,
   checkedColumns:[]
 }) => {

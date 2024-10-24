@@ -53,7 +53,8 @@ export function AutoTable<TData, TValue>({
 
   const params = new URLSearchParams(searchParams);
    let columnsURL=params.get("columns")
-   let tableColumns=(columnsURL)?columnsURL.split(","):Object.keys(data[0] as {})
+   //let tableColumns=(columnsURL)?columnsURL.split(","):Object.keys(data[0] as {})
+   let tableColumns=Object.keys(data[0] as {})
    let columns:ColumnDef<TData>[]= tableColumns.map((key:string):ColumnDef<TData>=>{
         return {
           accessorKey: key,
@@ -137,10 +138,41 @@ export function AutoTable<TData, TValue>({
               >
                 {row.getVisibleCells().map((cell) => {
                 
-                 if(cell.column.columnDef.accessorKey=="trading_name"){
+                if (/(https?:\/\/)/.test(cell.getValue())) {
+                  let urlsText = cell.getValue().split(";");
+
+
+              
+                 let links= urlsText.map((urlText) => {
+
+                    let httpIndex=urlText.indexOf("http");
+                    if (httpIndex !== -1) {
+                      let name = urlText.substring(0, httpIndex);
+                      let url = urlText.substring(httpIndex);
+                      return (
+                        
+                          <Link href={url as string} target="_blank">
+                            {name}
+                          </Link>
+                       
+                      );
+                    }else{
+                      return urlText
+                        
+                    }
+                   
+              
+                    
+                  });
+
+                 return (<TableCell key={cell.id} className="text-center">{links}</TableCell>)
+                }
+                 if(cell.column.columnDef.accessorKey=="trading_name1"){
                   //const [name, url] = cell.getValue().split("**##**");
                   //<Link href={url as string } target="_blank">{name}</Link>
-                  return (<TableCell key={cell.id} className="text-center"> {flexRender(cell.column.columnDef.cell,cell.getContext())}</TableCell>)
+                  return (<TableCell key={cell.id} className="text-center"> 
+                  <Link href="#" target="_blank">Muie</Link>
+                  </TableCell>)
                  }
                   return (<TableCell key={cell.id} className="text-center">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

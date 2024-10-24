@@ -14,7 +14,7 @@ export default async function BrokerPage({
   searchParams?: any;
   params?: any;
 }) {
-  const data = await getBrokers(
+  const [data,totalPages] = await getBrokers(
     searchParams.columns,
     locale,
     searchParams.page,
@@ -22,6 +22,8 @@ export default async function BrokerPage({
     searchParams.sortOrder,
     searchParams
   );
+ 
+
   const [dynamicColumns,defaultLoadedColumns ]= await translateBrokerDynamicColumns(locale);
   const broker_ext_columns={regulators:'Regulators'}
   // const {
@@ -79,7 +81,7 @@ export default async function BrokerPage({
                         filters={filter_options}
                         defaultLoadedColumns={defaultLoadedColumns}
                       />
-                      <Pagination totalPages={15} />
+                      <Pagination totalPages={totalPages} />
                     </div>
                     <div className="theme-border" />
                     <div className="row align-items-center">
@@ -321,7 +323,7 @@ async function getBrokers(
         "trading_instruments",
       ];
 
-      return brokers.data;
+      return [brokers.data,Math.ceil(brokers.meta.total/brokers.meta.per_page)];
   return brokers.data.map((broker: any) => {
     //remove dynamic_options_values from broker
     //const newBroker= {...broker,['dynamic_options_values']:null}

@@ -18,7 +18,7 @@ const SingleSelect = ({
   field:string,
   defaultValue:string
 }) => {
-  const [position, setPosition] = React.useState(defaultValue);
+  const [defaultValue1, setDefaultValue] = React.useState(defaultValue);
   
 
   return (
@@ -27,22 +27,27 @@ const SingleSelect = ({
               value={"123"}
               key={1234}
               onSelect={(e) => {
-              //  e.preventDefault();
+                e.preventDefault();
                 onClick(field,null)
+               setDefaultValue(null)
               }}
             >
+             [X] Reset
               {/*{field} Remove filter*/}
             </DropdownMenuRadioItem>
-      <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
+      <DropdownMenuRadioGroup value={defaultValue1} onValueChange={setDefaultValue}>
      
         {options.map((op, key) => {
+        
           return (
             <DropdownMenuRadioItem
               value={op.value}
+              
+              
               key={key}
               onSelect={(e) => {
                 e.preventDefault();
-                onClick(field,op.value)
+                onClick(field,op.value,e)
               }}
             >
               {op.name}

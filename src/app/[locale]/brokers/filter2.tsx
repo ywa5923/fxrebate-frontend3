@@ -163,6 +163,18 @@ export function FilterBrokers2({ filters }: { filters?: any }) {
    replace(`${pathname}?${params.toString()}`, { scroll: false });
  
   };
+
+  const resetFilter=(type:string,field:string)=>{
+       if (type=="checkbox"){
+       
+        setCheckboxfilters({...checkboxFilters,[field]:[]})
+       
+       }else{
+        setRadiofilters({...radioFilters,[field]:null})
+       }
+       params.delete(field);
+       replace(`${pathname}?${params.toString()}`, { scroll: false });
+  }
   return (
     <>
       <DropdownMenu>
@@ -183,7 +195,8 @@ export function FilterBrokers2({ filters }: { filters?: any }) {
           Reset Filters
         </Button>
 
-        <DropdownMenuContent className="w-56">
+        <DropdownMenuContent className="w-57">
+          
           <DropdownMenuLabel>Broker Filters</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <ScrollArea className="h-[300px]  rounded-md border ">
@@ -198,8 +211,7 @@ export function FilterBrokers2({ filters }: { filters?: any }) {
                 <DropdownMenuSub key={index}>
                   <DropdownMenuSubTrigger>
                     <span>
-                      {filter.name}{" "}
-                      {selectedFilters && <b>({selectedFilters})</b>}
+                      {filter.name}{" "} {selectedFilters && <><b>({selectedFilters})</b> <span style={{margin:2,color:"red",fontSize:"1.5em"}}  onClick={()=>resetFilter(filter.type,filter.field)}>×</span></>}
                     </span>
                   </DropdownMenuSubTrigger>
                   <DropdownMenuPortal>

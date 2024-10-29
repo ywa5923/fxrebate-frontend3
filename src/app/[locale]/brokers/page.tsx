@@ -24,7 +24,8 @@ export default async function BrokerPage({
   );
  
 
-  const [dynamicColumns,defaultLoadedColumns ]= await translateBrokerDynamicColumns(locale);
+  const [dynamicColumns,defaultLoadedColumns,allowSortingOptions ]= await translateBrokerDynamicColumns(locale);
+  
   const broker_ext_columns={regulators:'Regulators'}
   // const {
   //   filters,
@@ -33,8 +34,7 @@ export default async function BrokerPage({
   // } = await translateBrokerPage(locale);
   let filter_options = await getFilters(locale);
 
- //console.log("filters",filter_options);
- //console.log("filtersfffffffffffffffffffffffff",dynamicColumns);
+
 
   const columns = {
    // ...broker_static_columns,
@@ -42,6 +42,7 @@ export default async function BrokerPage({
   ...broker_ext_columns,
     ...dynamicColumns,
   };
+
 
   return (
     <>
@@ -80,6 +81,7 @@ export default async function BrokerPage({
                         columnNames={columns}
                         filters={filter_options}
                         defaultLoadedColumns={defaultLoadedColumns}
+                        allowSortingOptions={allowSortingOptions}
                       />
                       <Pagination totalPages={totalPages} />
                     </div>
@@ -375,7 +377,7 @@ async function translateBrokerDynamicColumns(locale: string) {
   const brokerOptions = await res.json();
   //merge an array of objects into one
  // let mergedObjects = Object.assign({}, ...dynamicColumns.data);
-  return [brokerOptions.options,brokerOptions.defaultLoadedOptions];
+  return [brokerOptions.options,brokerOptions.defaultLoadedOptions,brokerOptions.allowSortingOptions];
 }
 
 async function translateBrokerPage(locale: string) {

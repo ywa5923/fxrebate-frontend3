@@ -32,29 +32,35 @@ interface DataTableProps<TData, TValue> {
   data: TData[],
   columnNames:Record<string,string>,
   filters?:any,
-  defaultLoadedColumns?:Array<string>
+  defaultLoadedColumns?:Record<string,string>,
+  allowSortingOptions:Record<string,string>
 }
 //  columns: ColumnDef<TData, TValue>[]
 export function AutoTable<TData, TValue>({
   data,
   columnNames,
   filters,
-  defaultLoadedColumns
+  defaultLoadedColumns,
+  allowSortingOptions
 }: DataTableProps<TData, TValue>) {
 
-  let sortableKeys:Array<string>=Object.keys(columnNames);
+  
+ // let sortableKeys:Array<string>=Object.keys(columnNames);
+  let sortableKeys:Array<string>=Object.keys( allowSortingOptions);
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
 
   useEffect(()=>{
+   
     
   },[])
 
+ 
   const params = new URLSearchParams(searchParams);
    let columnsURL=params.get("columns")
    //let tableColumns=(columnsURL)?columnsURL.split(","):Object.keys(data[0] as {})
-   let tableColumns=Object.keys(data[0] as {})
+   let tableColumns=(data.length>0)?Object.keys(data[0] as {}):[]
    let columns:ColumnDef<TData>[]= tableColumns.map((key:string):ColumnDef<TData>=>{
         return {
           accessorKey: key,
@@ -137,24 +143,45 @@ export function AutoTable<TData, TValue>({
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => {
+
+                  let cellValue=cell.getValue()
+                  const regex = /<a href="([^"]+)">([^<]+)<\/a>/;
+                  const match=cellValue.match(regex)
+
+                  //if cell value contains a link in the form <a href="url">text</a>
+                  //grab the url and text and create a link with Link component
+                  if(match){
+                   let href = match[1];
+                  //   href=(href)?href:"#"
+                     const content = match[2];
+                  return (<TableCell key={cell.id} className="text-center">
+                     <Link href={href as string} target="_blank">
+                            {content}
+                          </Link>
+                  </TableCell>)
+                        
+                      
+                  }else if (/(https?:\/\/)/.test(cell.getValue())) {
+                  //if the cell value contain one or more urls in the form: UrlText http://example.com;UrlText2 http://example.com2
+                  //split the string by ; and create a Link for each url 
                 
-                if (/(https?:\/\/)/.test(cell.getValue())) {
+                
                   let urlsText = cell.getValue().split(";");
 
 
               
-                 let links= urlsText.map((urlText) => {
+                 let links= urlsText.map((urlText,index) => {
 
                     let httpIndex=urlText.indexOf("http");
                     if (httpIndex !== -1) {
                       let name = urlText.substring(0, httpIndex);
                       let url = urlText.substring(httpIndex);
                       return (
-                        
-                          <Link href={url as string} target="_blank">
+                        <>
+                          <Link key={index}href={url as string} target="_blank">
                             {name}
-                          </Link>
-                       
+                          </Link><br/>
+                          </>
                       );
                     }else{
                       return urlText
@@ -171,7 +198,7 @@ export function AutoTable<TData, TValue>({
                   //const [name, url] = cell.getValue().split("**##**");
                   //<Link href={url as string } target="_blank">{name}</Link>
                   return (<TableCell key={cell.id} className="text-center"> 
-                  <Link href="#" target="_blank">Muie</Link>
+                  <Link href="#" target="_blank">test</Link>
                   </TableCell>)
                  }
                   return (<TableCell key={cell.id} className="text-center">

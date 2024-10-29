@@ -104,6 +104,7 @@ export default function ColumnsSelector<TData>({
         {brokerColumns.map((brokerColumn,index)=>{
 
            // let isChecked=tableColumns.find((column)=>column.id===brokerColumn)?true:false
+           if(brokerColumn=='home_url' || brokerColumn=='logo' || brokerColumn=='trading_name') return;
             let col=checkedColumns.find((c)=>c===brokerColumn)
             let checkedValue=col?true:false
             

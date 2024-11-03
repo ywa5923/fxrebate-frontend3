@@ -24,22 +24,16 @@ export default async function BrokerPage({
   );
  
 
-  const [dynamicColumns,defaultLoadedColumns,allowSortingOptions ]= await translateBrokerDynamicColumns(locale);
+  const [dynamicColumns,defaultLoadedColumns,allowSortingOptions,booleanOptions ]= await translateBrokerDynamicColumns(locale);
   
-  const broker_ext_columns={regulators:'Regulators'}
-  // const {
-  //   filters,
-  //   broker_static_columns,
-  //   broker_ext_columns,
-  // } = await translateBrokerPage(locale);
   let filter_options = await getFilters(locale);
 
+  const booleanOptionsSlugs=Object.keys(booleanOptions);
 
+  
 
   const columns = {
-   // ...broker_static_columns,
    ...defaultLoadedColumns,
-  ...broker_ext_columns,
     ...dynamicColumns,
   };
 
@@ -82,6 +76,7 @@ export default async function BrokerPage({
                         filters={filter_options}
                         defaultLoadedColumns={defaultLoadedColumns}
                         allowSortingOptions={allowSortingOptions}
+                        booleanOptions={booleanOptionsSlugs}
                       />
                       <Pagination totalPages={totalPages} />
                     </div>
@@ -301,7 +296,13 @@ async function getBrokers(
   if (searchParams.filter_regulators) {
     url = url + `&filter_regulators[in]=${searchParams.filter_regulators}`;
   }
- url=url + '&zone[eq]=eu';
+  if (searchParams.filter_web) {
+    url = url + `&filter_web[in]=${searchParams.filter_web}`;
+  }
+  if (searchParams.filter_mobile) {
+    url = url + `&filter_mobile[in]=${searchParams.filter_mobile}`;
+  }
+ url=url + '&zone[eq]=zone1';
 
   console.log("url=========================", url);
   //`http://localhost:8000/api/v1/brokers?language[eq]=ro&page=1&columns[in]=position_home`+brokerColumns+
@@ -377,7 +378,7 @@ async function translateBrokerDynamicColumns(locale: string) {
   const brokerOptions = await res.json();
   //merge an array of objects into one
  // let mergedObjects = Object.assign({}, ...dynamicColumns.data);
-  return [brokerOptions.options,brokerOptions.defaultLoadedOptions,brokerOptions.allowSortingOptions];
+  return [brokerOptions.options,brokerOptions.defaultLoadedOptions,brokerOptions.allowSortingOptions,brokerOptions.booleanOptions];
 }
 
 async function translateBrokerPage(locale: string) {
@@ -391,7 +392,7 @@ async function translateBrokerPage(locale: string) {
 }
 
 async function getFilters(locale: string) {
-  let url = `http://localhost:8000/api/v1/broker-filters?language[eq]=${locale}`;
+  let url = `http://localhost:8000/api/v1/broker-filters?language[eq]=${locale}&zone[eq]=zone1`;
   const res = await fetch(url, { cache: "no-store" });
   const filters = await res.json();
 

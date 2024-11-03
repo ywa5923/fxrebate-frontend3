@@ -6,6 +6,7 @@ import { ArrowUpDown} from "lucide-react"
 import {Button} from "@/components/ui/button"
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import Link from "next/link"
+import { CheckCircledIcon,CrossCircledIcon } from "@radix-ui/react-icons"
 
 import {
   ColumnDef,
@@ -33,7 +34,8 @@ interface DataTableProps<TData, TValue> {
   columnNames:Record<string,string>,
   filters?:any,
   defaultLoadedColumns?:Record<string,string>,
-  allowSortingOptions:Record<string,string>
+  allowSortingOptions:Record<string,string>,
+  booleanOptions:Array<string>
 }
 //  columns: ColumnDef<TData, TValue>[]
 export function AutoTable<TData, TValue>({
@@ -41,7 +43,8 @@ export function AutoTable<TData, TValue>({
   columnNames,
   filters,
   defaultLoadedColumns,
-  allowSortingOptions
+  allowSortingOptions,
+  booleanOptions
 }: DataTableProps<TData, TValue>) {
 
   
@@ -177,11 +180,11 @@ export function AutoTable<TData, TValue>({
                       let name = urlText.substring(0, httpIndex);
                       let url = urlText.substring(httpIndex);
                       return (
-                        <>
-                          <Link key={index}href={url as string} target="_blank">
+                        <React.Fragment key={index + 10023}>
+                          <Link  href={url as string} target="_blank">
                             {name}
                           </Link><br/>
-                          </>
+                          </React.Fragment>
                       );
                     }else{
                       return urlText
@@ -193,14 +196,15 @@ export function AutoTable<TData, TValue>({
                   });
 
                  return (<TableCell key={cell.id} className="text-center">{links}</TableCell>)
-                }
-                 if(cell.column.columnDef.accessorKey=="trading_name1"){
-                  //const [name, url] = cell.getValue().split("**##**");
-                  //<Link href={url as string } target="_blank">{name}</Link>
-                  return (<TableCell key={cell.id} className="text-center"> 
-                  <Link href="#" target="_blank">test</Link>
+                }else if(booleanOptions.includes(cell.column.columnDef.accessorKey)){
+                  //booleanOptionsSlugs.includes(cell.column.columnDef.accessorKey)
+                  let cellValue=cell.getValue()?(<CheckCircledIcon style={{ width: '24px', height: '24px',color:"green"}}  />):(<CrossCircledIcon style={{ width: '24px', height: '24px',color:"red" }}  />);
+                  return(<TableCell key={cell.id} className="text-center" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}> 
+                    {cellValue}
                   </TableCell>)
                  }
+                
+                
                   return (<TableCell key={cell.id} className="text-center">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                    </TableCell>)

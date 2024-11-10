@@ -207,7 +207,7 @@ export function AutoTable<TData, TValue>({
                  }else if(ratingOptions.includes(cell.column.columnDef.accessorKey)){
                  
                   return(<TableCell key={cell.id} className="text-center" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}> 
-                   
+                   11
                   </TableCell>)
                  }
                 

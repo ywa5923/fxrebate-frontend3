@@ -24,13 +24,13 @@ export default async function BrokerPage({
   );
  
 
-  const [dynamicColumns,defaultLoadedColumns,allowSortingOptions,booleanOptions ]= await translateBrokerDynamicColumns(locale);
+  const [dynamicColumns,defaultLoadedColumns,allowSortingOptions,booleanOptions,ratingOptions ]= await translateBrokerDynamicColumns(locale);
   
   let filter_options = await getFilters(locale);
 
   const booleanOptionsSlugs=Object.keys(booleanOptions);
 
-  
+  const ratingOptionsSlugs=Object.keys(ratingOptions);
 
   const columns = {
    ...defaultLoadedColumns,
@@ -77,6 +77,7 @@ export default async function BrokerPage({
                         defaultLoadedColumns={defaultLoadedColumns}
                         allowSortingOptions={allowSortingOptions}
                         booleanOptions={booleanOptionsSlugs}
+                        ratingOptions={ratingOptionsSlugs}
                       />
                       <Pagination totalPages={totalPages} />
                     </div>
@@ -378,7 +379,7 @@ async function translateBrokerDynamicColumns(locale: string) {
   const brokerOptions = await res.json();
   //merge an array of objects into one
  // let mergedObjects = Object.assign({}, ...dynamicColumns.data);
-  return [brokerOptions.options,brokerOptions.defaultLoadedOptions,brokerOptions.allowSortingOptions,brokerOptions.booleanOptions];
+  return [brokerOptions.options,brokerOptions.defaultLoadedOptions,brokerOptions.allowSortingOptions,brokerOptions.booleanOptions,brokerOptions.ratingOptions];
 }
 
 async function translateBrokerPage(locale: string) {

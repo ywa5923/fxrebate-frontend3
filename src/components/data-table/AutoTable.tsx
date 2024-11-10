@@ -35,7 +35,8 @@ interface DataTableProps<TData, TValue> {
   filters?:any,
   defaultLoadedColumns?:Record<string,string>,
   allowSortingOptions:Record<string,string>,
-  booleanOptions:Array<string>
+  booleanOptions:Array<string>,
+  ratingOptions:Array<string>
 }
 //  columns: ColumnDef<TData, TValue>[]
 export function AutoTable<TData, TValue>({
@@ -44,7 +45,8 @@ export function AutoTable<TData, TValue>({
   filters,
   defaultLoadedColumns,
   allowSortingOptions,
-  booleanOptions
+  booleanOptions,
+  ratingOptions
 }: DataTableProps<TData, TValue>) {
 
   
@@ -201,6 +203,11 @@ export function AutoTable<TData, TValue>({
                   let cellValue=cell.getValue()?(<CheckCircledIcon style={{ width: '24px', height: '24px',color:"green"}}  />):(<CrossCircledIcon style={{ width: '24px', height: '24px',color:"red" }}  />);
                   return(<TableCell key={cell.id} className="text-center" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}> 
                     {cellValue}
+                  </TableCell>)
+                 }else if(ratingOptions.includes(cell.column.columnDef.accessorKey)){
+                 
+                  return(<TableCell key={cell.id} className="text-center" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}> 
+                   
                   </TableCell>)
                  }
                 

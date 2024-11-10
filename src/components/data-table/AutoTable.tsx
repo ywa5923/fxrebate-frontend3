@@ -7,6 +7,7 @@ import {Button} from "@/components/ui/button"
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import Link from "next/link"
 import { CheckCircledIcon,CrossCircledIcon } from "@radix-ui/react-icons"
+import Rating from 'react-rating';
 
 import {
   ColumnDef,
@@ -206,8 +207,17 @@ export function AutoTable<TData, TValue>({
                   </TableCell>)
                  }else if(ratingOptions.includes(cell.column.columnDef.accessorKey)){
                  
+                  let cellValue=parseFloat(cell.getValue() as string);
+                 
+                  let rating= <Rating
+                  initialRating={cellValue}
+                  readonly
+                  fractions={2}
+                  emptySymbol={<span style={{ fontSize: 25, color: 'lightgrey' }}>&#9733;</span>}
+                  fullSymbol={<span style={{ fontSize: 25, color: '#ffd700' }}>&#9733;</span>}
+                 />
                   return(<TableCell key={cell.id} className="text-center" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}> 
-                   11
+                        {rating}
                   </TableCell>)
                  }
                 

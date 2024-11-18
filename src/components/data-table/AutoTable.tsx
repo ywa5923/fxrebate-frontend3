@@ -201,23 +201,25 @@ export function AutoTable<TData, TValue>({
                  return (<TableCell key={cell.id} className="text-center">{links}</TableCell>)
                 }else if(booleanOptions.includes(cell.column.columnDef.accessorKey)){
                   //booleanOptionsSlugs.includes(cell.column.columnDef.accessorKey)
-                  let cellValue=cell.getValue()?(<CheckCircledIcon style={{ width: '24px', height: '24px',color:"green"}}  />):(<CrossCircledIcon style={{ width: '24px', height: '24px',color:"red" }}  />);
-                  return(<TableCell key={cell.id} className="text-center" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}> 
+                  let cellValue=cell.getValue()?(<CheckCircledIcon style={{ width: '24px', height: '24px',color:"green",  margin:'0 auto'}}  />):(<CrossCircledIcon style={{ width: '24px', height: '24px',color:"red", margin:'0 auto' }}  />);
+                  return(<TableCell key={cell.id} className="text-center" > 
                     {cellValue}
                   </TableCell>)
                  }else if(ratingOptions.includes(cell.column.columnDef.accessorKey)){
                  
                   let cellValue=parseFloat(cell.getValue() as string);
                  
-                  let rating= <Rating
-                  initialRating={cellValue}
-                  readonly
-                  fractions={2}
-                  emptySymbol={<span style={{ fontSize: 25, color: 'lightgrey' }}>&#9733;</span>}
-                  fullSymbol={<span style={{ fontSize: 25, color: '#ffd700' }}>&#9733;</span>}
-                 />
-                  return(<TableCell key={cell.id} className="text-center" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}> 
-                        {rating}
+                 
+                  return(<TableCell key={cell.id} className="text-center" > 
+                        <Rating  
+                        initialRating={cellValue} 
+                        readonly 
+                        fractions={2} 
+                         style={{minWidth: 80}}
+                         emptySymbol={<span style={{ fontSize: 25, color: 'lightgrey' }}>&#9733;</span>}
+                        fullSymbol={<span style={{ fontSize: 25, color: '#ffd700' }}>&#9733;</span>} 
+                         />
+
                   </TableCell>)
                  }
                 

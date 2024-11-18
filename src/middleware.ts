@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 export async function middleware(req) {
   //const ip = req.headers.get('x-forwarded-for')?.split(',')[0] || req.ip;
-  const ip="217.156.104.11";
+  const ip="78.96.85.162";
   const apiKey = process.env.IPREGISTRY_API_KEY;
   const response = await fetch(`https://api.ipregistry.co/${ip}?key=ira_Yqs7i0q8xk09d6HPG9De8cqBLmU8bZ4RIHgc`);
   const data = await response.json();

@@ -303,7 +303,7 @@ async function getBrokers(
   if (searchParams.filter_mobile) {
     url = url + `&filter_mobile[in]=${searchParams.filter_mobile}`;
   }
- url=url + '&zone[eq]=zone1';
+ url=url + '&country[eq]=ro';
 
   console.log("url=========================", url);
   //`http://localhost:8000/api/v1/brokers?language[eq]=ro&page=1&columns[in]=position_home`+brokerColumns+
@@ -393,7 +393,7 @@ async function translateBrokerPage(locale: string) {
 }
 
 async function getFilters(locale: string) {
-  let url = `http://localhost:8000/api/v1/broker-filters?language[eq]=${locale}&zone[eq]=zone1`;
+  let url = `http://localhost:8000/api/v1/broker-filters?language[eq]=${locale}&country[eq]=ro`;
   const res = await fetch(url, { cache: "no-store" });
   const filters = await res.json();
 

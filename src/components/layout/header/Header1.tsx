@@ -1,6 +1,9 @@
 import React from 'react'
 import Link from "next/link"
 import Menu from '../Menu'
+
+import MyCanvas from "@/components/three-js/MyCanvas";
+import {Logo5} from '@/components/three-js/Logo5';
 type Props={
     scroll:boolean;
     isMobileMenu:boolean;
@@ -17,7 +20,11 @@ const Header1:React.FC<Props> = ({ scroll, isMobileMenu, handleMobileMenu }) => 
                     <div className="header-elements">
                         <div className="header_menu_area">
                             <div className="logo">
-                                <Link href="/"><img src="/assets/img/logo/site-logo-3.svg" alt="" /></Link>
+                               
+                                <MyCanvas>
+                                    <Logo5 fbxPath="./logo_test_1c.fbx" texturePath="./sky.jpeg"/>
+                               </MyCanvas> 
+                                
                             </div>
                             <div className="main-menu">
                                 <div className="menu-wrap">

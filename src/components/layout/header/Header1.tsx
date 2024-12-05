@@ -22,7 +22,7 @@ const Header1:React.FC<Props> = ({ scroll, isMobileMenu, handleMobileMenu }) => 
                             <div className="logo">
                                
                                 <MyCanvas>
-                                    <Logo5 fbxPath="./logo_test_1c.fbx" texturePath="./sky.jpeg"/>
+                                    <Logo5 fbxPath="/logo_test_1c.fbx" texturePath="/sky.jpeg"/>
                                </MyCanvas> 
                                 
                             </div>

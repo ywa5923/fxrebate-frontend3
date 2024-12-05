@@ -215,7 +215,7 @@ export function AutoTable<TData, TValue>({
                         initialRating={cellValue} 
                         readonly 
                         fractions={2} 
-                         style={{minWidth: 80}}
+                         style={{minWidth: 120}}
                          emptySymbol={<span style={{ fontSize: 25, color: 'lightgrey' }}>&#9733;</span>}
                         fullSymbol={<span style={{ fontSize: 25, color: '#ffd700' }}>&#9733;</span>} 
                          />

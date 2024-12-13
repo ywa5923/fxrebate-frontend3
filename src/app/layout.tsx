@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "../globals.css";
+import Layout from "@/components/layout/Layout";
+import "./globals.css";
 import "aos/dist/aos.css";
 import "bootstrap/dist/css/bootstrap.min.css"
 import 'swiper/css';
@@ -31,7 +32,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        {children}</body>
+      <Layout headerStyle={1} footerStyle={1}>
+    
+        {children}
+         
+      </Layout>
+      </body>
+    
     </html>
   );
 }

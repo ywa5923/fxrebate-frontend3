@@ -1,6 +1,6 @@
 "use server";
 
-import Layout from "@/components/layout/Layout";
+
 import Link from "next/link";
 import { AutoTable } from "@/components/data-table/AutoTable";
 import Pagination from "@/components/elements/Pagination";
@@ -40,13 +40,8 @@ export default async function BrokerPage({
 
   return (
     <>
-      <Layout headerStyle={1} footerStyle={1}>
-        <div>
-          <div
-            className="single-blog-area padding-top inner-font-1 inner-blog-1"
-            id="home"
-          >
-            <div className="container">
+    
+           <div className="container">
               <div className="row">
                 <div className="col-lg-12 m-auto">
                   <div className="single-blog-contents">
@@ -234,11 +229,9 @@ export default async function BrokerPage({
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Layout>
+                </div>
+               </div>
+              
     </>
   );
 }

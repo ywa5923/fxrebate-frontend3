@@ -72,12 +72,84 @@ const Menu:React.FC<{}> = () => {
                         </li>
                     </ul>
                 </li>
-                <li className="dropdown-parrent"><Link href="/about-1">About Us</Link>
+                <li className="dropdown-parrent"><Link href="/about-1">Brokers</Link>
                     <ul className="theme-dropdown">
-                        <li><Link href="/about-1">About Us - 1</Link></li>
-                        <li><Link href="/about-2">About Us - 2</Link></li>
+                        <li><Link href="/about-1">Forex Brokers</Link></li>
+                        <li><Link href="/about-2">Forex Brokers List</Link></li>
+                        <li><Link href="/about-2">Forex Brokers Ratings/Reviews</Link></li>
+                        <li  className="multi-dropdown-parrent">
+                            <Link href="/about-2">Broker Guides
+                               <span className="multi-drop-icon">
+                                    <i className="fa-solid fa-angle-right" />
+                                </span>
+                            </Link>
+                            <ul className="multi-dropdown theme-dropdown">
+                                <li><Link href="/blog-1">Broker Guides 1</Link></li>
+                                <li><Link href="/blog-2">Broker Guides 2</Link></li>
+                                <li><Link href="/blog-3">Broker Guides 3</Link></li>
+                                <li><Link href="/blog-mesonry-1">Broker Guides 4</Link></li>
+                                <li><Link href="/blog-mesonry-2">Broker Guides 5</Link></li>
+                                <li><Link href="/blog-mesonry-3">Broker Guides 6</Link></li>
+                            </ul>
+                        </li>
+                        <li><Link href="/about-2">Best Forex Brokers 2025</Link></li>
+                        <li><Link href="/about-2">Broker Promotions</Link></li>
+                        <li><Link href="/about-2">Broker Contests</Link></li>
                     </ul>
                 </li>
+                {/* Cryptos*/}
+                <li className="dropdown-parrent"><Link href="/about-1">Cryptos</Link>
+                    <ul className="theme-dropdown">
+                        <li><Link href="/about-1">Crypto Exchanges</Link></li>
+                        <li><Link href="/about-2">Crypto Exchanges List</Link></li>
+                        <li><Link href="/about-2">Crypto Exchanges Ratings / Reviews</Link></li>
+                        <li  className="multi-dropdown-parrent">
+                            <Link href="/about-2">Crypto Guides
+                               <span className="multi-drop-icon">
+                                    <i className="fa-solid fa-angle-right" />
+                                </span>
+                            </Link>
+                            <ul className="multi-dropdown theme-dropdown">
+                                <li><Link href="/blog-1">Crypto Guides 1</Link></li>
+                                <li><Link href="/blog-2">Crypto Guides 2</Link></li>
+                                <li><Link href="/blog-3">Crypto Guides 3</Link></li>
+                                <li><Link href="/blog-mesonry-1">Crypto Guides 4</Link></li>
+                                <li><Link href="/blog-mesonry-2">Crypto Guides 5</Link></li>
+                                <li><Link href="/blog-mesonry-3">Crypto Guides 6</Link></li>
+                            </ul>
+                        </li>
+                        <li><Link href="/about-2">Best Crypto Exchanges 2025</Link></li>
+                        <li><Link href="/about-2">Crypto Promotions</Link></li>
+                        <li><Link href="/about-2">Crypto Contests</Link></li>
+                    </ul>
+                </li>
+              {/* Props */}
+              <li className="dropdown-parrent"><Link href="/about-1">Props</Link>
+                    <ul className="theme-dropdown">
+                        <li><Link href="/about-1">Prop Firms</Link></li>
+                        <li><Link href="/about-2">Prop Firms List</Link></li>
+                        <li><Link href="/about-2">Prop Firms Ratings / Reviews</Link></li>
+                        <li  className="multi-dropdown-parrent">
+                            <Link href="/about-2">Prop Firms Guides
+                               <span className="multi-drop-icon">
+                                    <i className="fa-solid fa-angle-right" />
+                                </span>
+                            </Link>
+                            <ul className="multi-dropdown theme-dropdown">
+                                <li><Link href="/blog-1">Prop Firms Guides 1</Link></li>
+                                <li><Link href="/blog-2">Prop Firms Guides 2</Link></li>
+                                <li><Link href="/blog-3">Prop Firms Guides 3</Link></li>
+                                <li><Link href="/blog-mesonry-1">Prop Firms Guides 4</Link></li>
+                                <li><Link href="/blog-mesonry-2">Prop Firms Guides 5</Link></li>
+                                <li><Link href="/blog-mesonry-3">Prop Firms Guides 6</Link></li>
+                            </ul>
+                        </li>
+                        <li><Link href="/about-2">Best Crypto Exchanges 2025</Link></li>
+                        <li><Link href="/about-2">Crypto Promotions</Link></li>
+                        <li><Link href="/about-2">Crypto Contests</Link></li>
+                    </ul>
+                </li>
+              
                 <li className="mega-menu-parrent"><Link href="#">Pages</Link>
                     <ul className="theme-mega-menu">
                         <li className="mega-menu">

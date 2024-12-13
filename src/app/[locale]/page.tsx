@@ -15,13 +15,11 @@ export default function Home() {
   return (
     <>
 
-            <Layout headerStyle={1} footerStyle={1}>
+            
              <Welcome/>
             
-            </Layout>
-                  {/*<MyCanvas>
-                  <Logo5 fbxPath="./logo_test_1c.fbx" texturePath="./sky.jpeg"/>
-                  </MyCanvas>*/}
+       
+                
             
         </>
   );

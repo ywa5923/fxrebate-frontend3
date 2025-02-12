@@ -29,6 +29,7 @@
     "lucide-react": "^0.408.0",
     "next": "14.2.5",
     "react": "^18",
+    "react-bootstrap": "^2.10.6",
     "react-dom": "^18",
     "react-rating": "^2.0.5",
     "react-slick": "^0.30.2",

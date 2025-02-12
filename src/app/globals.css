@@ -68,3 +68,29 @@
   }
 }
 html body { overflow: auto !important; padding-right: 0 !important; }
+
+.tab-button {
+  background-color: #337ab7;
+  color: #fff;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+}
+
+.tab-button:hover {
+  background-color: #23527c;
+}
+
+/*ul.broker-tabs .nav-tabs .nav-item .nav-link.active {
+  border: none;
+  border-bottom: none;
+  box-shadow: none;
+}
+ul.broker-tabs .nav-tabs .nav-item .nav-link.active {
+  border-color: transparent;
+}*/
+
+

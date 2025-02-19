@@ -27,6 +27,7 @@ export default async function BrokerPage({
   const [dynamicColumns,defaultLoadedColumns,allowSortingOptions,booleanOptions,ratingOptions ]= await translateBrokerDynamicColumns(locale);
   
   let filter_options = await getFilters(locale);
+  
 
   const booleanOptionsSlugs=Object.keys(booleanOptions);
 

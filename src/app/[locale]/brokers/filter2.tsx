@@ -208,14 +208,14 @@ export function FilterBrokers2({ filters }: { filters?: any }) {
                   
                   
               return (
-                <DropdownMenuSub key={index}>
+                <DropdownMenuSub key={index} >
                   <DropdownMenuSubTrigger>
                     <span>
                       {filter.name}{" "} {selectedFilters && <><b>({selectedFilters})</b> <span style={{margin:2,color:"red",fontSize:"1.5em"}}  onClick={()=>resetFilter(filter.type,filter.field)}>×</span></>}
                     </span>
                   </DropdownMenuSubTrigger>
                   <DropdownMenuPortal>
-                    <DropdownMenuSubContent>
+                    <DropdownMenuSubContent >
                       {filter.type === "checkbox" ? (
                         <MultiSelect
                           onClick={handleCheckbox}

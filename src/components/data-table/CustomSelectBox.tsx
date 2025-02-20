@@ -7,6 +7,7 @@ import { FilterField } from "@/types";
 import { FilterOption } from "@/types";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {RatingComponent} from "./RatingComponent";
 
 export function CustomSelectBox({
   filter: { options, name, field },
@@ -81,7 +82,9 @@ export function CustomSelectBox({
                     >
                       {option.name}
                     </label>
+                    <RatingComponent key={index+"ds"}/>
                   </div>
+                   
                 ))}
               </RadioGroup>
             ) : (
@@ -89,7 +92,7 @@ export function CustomSelectBox({
               options.map((option: FilterOption, index) => {
                 const checked = selected?.includes(option.value) ?? false;
                 return (
-                  <div className="flex items-center space-x-2" key={index}>
+                  <div className="flex items-center space-x-2 p-1" key={index}>
                     <Checkbox
                       id={`${option.value}`}
                       defaultChecked={checked}

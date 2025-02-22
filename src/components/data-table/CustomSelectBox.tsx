@@ -29,18 +29,7 @@ export function CustomSelectBox({
   const { replace } = useRouter();
 
   useEffect(() => {
-
-    // if(JSON.stringify(selected) != JSON.stringify(checkedItems || true)){
-    //   setCheckedItems((prev)=>{
-    //     selected=selected?selected:[]
-    //     const newParams = [ ...selected ]; // Ensure a new object reference
-    //     return newParams;
-    //    });
-    // }
-
     setCheckedItems([...(selected || [])]); // Update checkedItems with selected || []);
-  // setCheckedItems(selected || []);
-
   }, [selected]);
   const onCheckedChange = (
     checked: boolean | string,
@@ -48,31 +37,22 @@ export function CustomSelectBox({
     field: string,
     type: string
   ) => {
-    if (params.has("page")) {
-      params.delete("page");
-    }
+    if (params.has("page")) params.delete("page");
+
     const paramsArray = new Set(params.get(field)?.split(",") || []);
     if (checked) {
-    
-        (type === "radio") && paramsArray.clear();
-        paramsArray.add(value);   
-        params.set(field, Array.from(paramsArray).join(","));
-       // setCheckedItems((prev) => [...prev, value]);
-      
+          if (type === "radio") paramsArray.clear();
+        paramsArray.add(value);       
     } else {
-
       paramsArray.delete(value);
       if (paramsArray.size == 0) {
         params.delete(field);
         replace(`${pathname}?${params.toString()}`);
         return;
       }
-      params.set(field, Array.from(paramsArray).join(","));
-     // setCheckedItems((prev) => prev.filter((item) => item !== value));
- 
-
+      
     }
-
+    params.set(field, Array.from(paramsArray).join(","));
     replace(`${pathname}?${params}`);
     
   };
@@ -87,11 +67,11 @@ export function CustomSelectBox({
         {name} {checkedItems?.length ? `(${checkedItems.length})` : ""}
       </Button>
       <ScrollArea className="max-h-[200px]  rounded-md border scrollbar-thin scrollbar overflow-y-auto">
-        <div className="">
+       
          
-          {(open || expanded) &&
-            
-            ((type === "radio" || type === "rating") ? (
+          {(open || expanded) && (
+            <div>
+            {type === "radio" || type === "rating" ? (
               // Render RadioGroup if type is "radio"
               <RadioGroup
                 onValueChange={(value) => onCheckedChange(true, value, field, type)}
@@ -120,7 +100,7 @@ export function CustomSelectBox({
                 const checked = checkedItems?.includes(option.value) ?? false;
               
                 return (
-                  <div className="flex items-center space-x-2 p-1" key={index}>
+                  <div className="flex items-center space-x-2 p-1" key={option.value}>
                     <Checkbox
                       id={`${option.value}`}
                       defaultChecked={checked}
@@ -128,17 +108,18 @@ export function CustomSelectBox({
                         onCheckedChange(checked, option.value, field, type)
                       }
                     />
-                    <label
-                      htmlFor={`${option.value}`}
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
+                   <label htmlFor={option.value} className="text-sm font-medium">
                       {option.name}
                     </label>
                   </div>
                 );
               })
-            ))}
-        </div>
+
+            )}
+            
+            </div>
+          )}
+        
         </ScrollArea>
         <div className="flex flex-wrap flex-col gap-1 m-2">
           

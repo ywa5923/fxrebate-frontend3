@@ -85,7 +85,7 @@ export function CustomSelectBox({
                 {options && options?.map((option) => (
                   <div className="flex items-center space-x-2" key={option.value}>
                     <RadioGroupItem id={field+"-"+option.value} value={option.value} />
-                    <label htmlFor={field+"-"+option.value} className="text-sm font-medium">
+                    <label htmlFor={field+"-"+option.value} className="text-sm w-[50px] font-medium">
                       {option.name} 
                     </label>
                     {type === "rating" && <RatingComponent value={Number(option.value)}/>}

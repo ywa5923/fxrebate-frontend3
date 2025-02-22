@@ -390,7 +390,7 @@ async function getFilters(locale: string) {
   let url = `http://localhost:8000/api/v1/broker-filters?language[eq]=${locale}&country[eq]=ro`;
   const res = await fetch(url, { cache: "no-store" });
   const filters = await res.json();
-
+  
   return filters;
 }
 //backend tested with http://localhost:8000/api/v1/brokers?language[eq]=ro&page=1&columns[in]=trading_name,trading_fees,account_type,jurisdictions,promotion_title,fixed_spreads,support_options&order_by[eq]=+account_type

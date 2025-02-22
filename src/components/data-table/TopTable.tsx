@@ -29,9 +29,9 @@ export default function TopTable<TData>({
           <SearchTable />
           <ModalFilter filters={filters} />
           <DropdownFilter filters={filters} />
-          <FilterBrokers2 filters={filters}/>
+          <FilterBrokers2 filters={filters.advanced_filters}/>
          
-          <PopoverFilter filters={filters} />
+          <PopoverFilter filters={filters.davanced_filters} />
         
           <ColumnsSelector table={table} columnNames={columnNames} defaultLoadedColumns={defaultLoadedColumns}/>
         </div>

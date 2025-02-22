@@ -19,9 +19,11 @@ import { Checkboxes } from "./Checkboxes";
 import { CustomSelectBox } from "./CustomSelectBox";
 import { FilterForm } from "./FilterForm";
 
+import {TriangleDownIcon} from "@radix-ui/react-icons";
+
 export function ModalFilter({filters}:{filters:any}) {
 
-
+console.log(filters)
   return (
    
    
@@ -42,8 +44,17 @@ export function ModalFilter({filters}:{filters:any}) {
         </DialogHeader>
         
         <div className="p-0 max-w-full">
+
+        <FilterForm  filters={filters.simple_filters} />
+        <div className="flex items-center text-base   p-2 mb-2  w-full ">
+
+        <h2 className="text-lg  text-gray-500">Advanced Filters</h2>
+         <TriangleDownIcon className="ml-auto"/>
+        </div>
+
+        <FilterForm  filters={filters.advanced_filters} />
+        
        
-        <FilterForm filters={filters}/>
          </div>
          
      

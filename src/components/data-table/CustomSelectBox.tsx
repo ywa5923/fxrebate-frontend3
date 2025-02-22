@@ -8,23 +8,40 @@ import { FilterOption } from "@/types";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {RatingComponent} from "./RatingComponent";
-
+import { useEffect } from "react";
 export function CustomSelectBox({
-  filter: { options, name, field },
+  filter: { options, name, field,type,expanded},
   selected,
-  type,
+  
 }: {
   filter: FilterField;
-  selected: string[] | string | null;
-  type: "checkbox" | "radio";
+  selected?: string[] | null;
+  
 }) {
   const [open, setOpen] = useState(false);
+ 
+  const [checkedItems, setCheckedItems] = useState<string[]>([]);
+
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const params = new URLSearchParams(searchParams);
   const { replace } = useRouter();
 
+  useEffect(() => {
+
+    // if(JSON.stringify(selected) != JSON.stringify(checkedItems || true)){
+    //   setCheckedItems((prev)=>{
+    //     selected=selected?selected:[]
+    //     const newParams = [ ...selected ]; // Ensure a new object reference
+    //     return newParams;
+    //    });
+    // }
+
+    setCheckedItems([...(selected || [])]); // Update checkedItems with selected || []);
+  // setCheckedItems(selected || []);
+
+  }, [selected]);
   const onCheckedChange = (
     checked: boolean | string,
     value: string,
@@ -36,19 +53,28 @@ export function CustomSelectBox({
     }
     const paramsArray = new Set(params.get(field)?.split(",") || []);
     if (checked) {
+    
         (type === "radio") && paramsArray.clear();
         paramsArray.add(value);   
+        params.set(field, Array.from(paramsArray).join(","));
+       // setCheckedItems((prev) => [...prev, value]);
+      
     } else {
+
       paramsArray.delete(value);
       if (paramsArray.size == 0) {
         params.delete(field);
         replace(`${pathname}?${params.toString()}`);
         return;
       }
+      params.set(field, Array.from(paramsArray).join(","));
+     // setCheckedItems((prev) => prev.filter((item) => item !== value));
+ 
+
     }
 
-    params.set(field, Array.from(paramsArray).join(","));
     replace(`${pathname}?${params}`);
+    
   };
 
   return (
@@ -56,21 +82,22 @@ export function CustomSelectBox({
       <Button
         variant="outline"
         className="mt-2 w-full"
-        onClick={() => setOpen(!open)}
+        {...(!expanded && { onClick: () => setOpen(!open) })}
       >
-        {name}
+        {name} {checkedItems?.length ? `(${checkedItems.length})` : ""}
       </Button>
       <ScrollArea className="max-h-[200px]  rounded-md border scrollbar-thin scrollbar overflow-y-auto">
         <div className="">
-          {open &&
-            options &&
-            (type === "radio" ? (
+         
+          {(open || expanded) &&
+            
+            ((type === "radio" || type === "rating") ? (
               // Render RadioGroup if type is "radio"
               <RadioGroup
                 onValueChange={(value) => onCheckedChange(true, value, field, type)}
                 defaultValue={selected?.[0] ?? ""}
               >
-                {options.map((option: FilterOption, index) => (
+                {options?.map((option: FilterOption, index) => (
                   <div className="flex items-center space-x-2" key={index}>
                     <RadioGroupItem
                       id={`${option.value}`}
@@ -82,15 +109,16 @@ export function CustomSelectBox({
                     >
                       {option.name}
                     </label>
-                    <RatingComponent key={index+"ds"}/>
+                    {type === "rating" && <RatingComponent key={index+"ds"}/>}
                   </div>
                    
                 ))}
               </RadioGroup>
             ) : (
               // Render Checkboxes if type is "checkbox"
-              options.map((option: FilterOption, index) => {
-                const checked = selected?.includes(option.value) ?? false;
+              options?.map((option: FilterOption, index) => {
+                const checked = checkedItems?.includes(option.value) ?? false;
+              
                 return (
                   <div className="flex items-center space-x-2 p-1" key={index}>
                     <Checkbox
@@ -111,7 +139,36 @@ export function CustomSelectBox({
               })
             ))}
         </div>
-      </ScrollArea>
+        </ScrollArea>
+        <div className="flex flex-wrap flex-col gap-1 m-2">
+          
+        {!expanded && checkedItems?.map((item, index) => (
+             
+              <div
+              key={index}
+              className="flex items-center justify-between rounded-full bg-blue-100 px-2 py-0.5 text-sm font-medium text-blue-800"
+             >
+              {options?.find((option) => option.value === item)?.name}
+              <span
+                onClick={() => {
+                  onCheckedChange(false, item, field, type);
+                  setCheckedItems((prev) => {
+                    // If prev is null, default to an empty array
+                    const prevItems = Array.isArray(prev) ? prev : [];
+                    return prevItems.filter((i) => i !== item);
+                  });
+                  setOpen(false)
+                 }}
+                className="font-bold cursor-pointer ml-2"
+              >
+                ×
+              </span>
+            </div>
+
+            ))
+          }
+        </div>
+      
     </div>
   );
 }

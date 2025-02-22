@@ -5,6 +5,7 @@ import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import  { FilterOption } from '@/types/index'; 
 import {FilterField} from '@/types/index';
+import { useMemo } from "react";
 
 
 type FilterParams=Partial<Record<FilterField["field"], string | string[] | null>>
@@ -48,9 +49,12 @@ export function FilterForm({ filters }: { filters: FilterField[] }) {
         }
       });
 
-      setFilterParams(params);
-     
-  }, []);
+      //setFilterParams(params);
+      setFilterParams((prev) => {
+        const newParams = { ...params }; // Ensure a new object reference
+        return newParams;
+      });
+  },[searchParams]);
 
 
     return (
@@ -58,9 +62,14 @@ export function FilterForm({ filters }: { filters: FilterField[] }) {
             {filters && filters?.map((filter: FilterField, index: number) => {
 
                 //let selected=(filter.field in filterParams)?filterParams[filter.field]:null;
-                const selected=filterParams[filter.field]??null;
+              //  const selected=filterParams[filter.field]??null;
+               // const selected = useMemo(() => [...(filterParams[filter.field] ?? [])], [filterParams[filter.field]]);
+               const selected = filterParams[filter.field] ? [...filterParams[filter.field]] : null;
+               
+
+               // console.log(`Rendering CustomSelectBox for ${filter.field}:`, selected);
                 return (
-                    <CustomSelectBox filter={filter} selected={selected} key={filter.field} type={filter.type} />
+                    <CustomSelectBox filter={filter} selected={selected} key={filter.field}  />
                 )
             })}
         </>

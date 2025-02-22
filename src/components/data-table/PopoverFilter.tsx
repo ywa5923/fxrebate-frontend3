@@ -11,7 +11,7 @@ import  {CustomSelectBox}  from "./CustomSelectBox";
 
 
 export function PopoverFilter({filters}:{filters:any}) {
-  console.log(filters[1])
+  
 
   return (
    

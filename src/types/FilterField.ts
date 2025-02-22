@@ -3,6 +3,7 @@ export type FilterField = {
     field: string;
     name: string;
     type: 'checkbox' | 'radio' | 'rating';
-    expanded?: boolean;
+    expanded: boolean;
+    headless?: boolean;
     options: FilterOption[]; // Only for fields with predefined options
   };

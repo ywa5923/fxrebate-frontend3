@@ -94,16 +94,10 @@ ul.broker-tabs .nav-tabs .nav-item .nav-link.active {
 }*/
 
 
-.scrollbar::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+.custom-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
-.scrollbar::-webkit-scrollbar-thumb {
-  background-color: #ccc;
-  border-radius: 10px;
-}
-
-.scrollbar::-webkit-scrollbar-track {
-  background-color: #f0f0f0;
+.custom-scrollbar {
+  scrollbar-width: none;
 }

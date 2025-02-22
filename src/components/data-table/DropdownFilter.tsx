@@ -25,7 +25,7 @@ export function DropdownFilter({ filters }: { filters: FilterField[] }) {
 
     return (
         <>
-        <DropdownMenu>
+        <DropdownMenu >
           <DropdownMenuTrigger asChild>
             <Button
               style={{ backgroundColor: "orange", color: "black" }}
@@ -34,8 +34,8 @@ export function DropdownFilter({ filters }: { filters: FilterField[] }) {
               Brokers Filters
             </Button>
           </DropdownMenuTrigger>
-         
-          <DropdownMenuContent className="w-[250px]">
+         < DropdownMenuPortal>
+          <DropdownMenuContent   className="overflow-y-auto">
             
             <DropdownMenuLabel>Broker Filters</DropdownMenuLabel>
             <DropdownMenuSeparator />
@@ -44,6 +44,7 @@ export function DropdownFilter({ filters }: { filters: FilterField[] }) {
 
             </ScrollArea>
           </DropdownMenuContent>
+          </DropdownMenuPortal>
         </DropdownMenu>
       </>
     );

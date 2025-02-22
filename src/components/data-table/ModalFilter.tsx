@@ -17,7 +17,7 @@ import { MultipleSelect } from "./MultipleSelect";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Checkboxes } from "./Checkboxes";
 import { CustomSelectBox } from "./CustomSelectBox";
-
+import { FilterForm } from "./FilterForm";
 
 export function ModalFilter({filters}:{filters:any}) {
 
@@ -32,26 +32,20 @@ export function ModalFilter({filters}:{filters:any}) {
       </DialogTrigger>
     
      
-      <DialogContent  className="sm:max-w-[325px]  overflow-y-auto">
+      <DialogContent  className="sm:max-w-[300px] h-[800px] overflow-x-hidden overflow-y-scroll">
      
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
+          <DialogTitle> Broker filters</DialogTitle>
           <DialogDescription>
-            Broker filters
+           
           </DialogDescription>
         </DialogHeader>
-        <ScrollArea className="h-[500px] w-full rounded-md border ">
-        <div className="p-4">
+        
+        <div className="p-0 max-w-full">
        
-        {filters && filters.map((filter:any, index:number) => {
-          return (
-            
-            /*<MultipleSelect options={filter.options} field={filter.field} name={filter.name} checkedColumns={filter.checkedColumns}  key={index}/>*/
-            <CustomSelectBox options={filter.options} field={filter.field} fieldName={filter.name} checkedValues={filter.checkedColumns} key={index}/>
-
-          )
-        })}
+        <FilterForm filters={filters}/>
          </div>
+         
      
     
         <DialogFooter>
@@ -62,7 +56,7 @@ export function ModalFilter({filters}:{filters:any}) {
           </DialogClose>
         </DialogFooter>
       
-       </ScrollArea>
+       
       
       </DialogContent>
       

@@ -27,9 +27,10 @@ export default function TopTable<TData>({
       <div className="w-full">
         <div className="flex  items-center py-2">
           <SearchTable />
+          <ModalFilter filters={filters} />
           <DropdownFilter filters={filters} />
           <FilterBrokers2 filters={filters}/>
-          <ModalFilter filters={filters} />
+         
           <PopoverFilter filters={filters} />
         
           <ColumnsSelector table={table} columnNames={columnNames} defaultLoadedColumns={defaultLoadedColumns}/>

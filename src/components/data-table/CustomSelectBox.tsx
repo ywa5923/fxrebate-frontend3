@@ -8,9 +8,10 @@ import { Button } from "../ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { RatingComponent } from "./RatingComponent";
 import { FilterField, FilterOption } from "@/types";
+import { TriangleDownIcon } from "@radix-ui/react-icons";
 
 export function CustomSelectBox({
-  filter: { options, name, field, type, expanded },
+  filter: { options, name, field, type, expanded,headless=false },
   selected,
 }: {
   filter: FilterField;
@@ -27,6 +28,7 @@ export function CustomSelectBox({
   useEffect(() => {
     if(JSON.stringify(selected)!==JSON.stringify(checkedItems))
     setCheckedItems([...selected]);
+    
   }, [selected]);
 
   useEffect(() => {
@@ -46,7 +48,7 @@ export function CustomSelectBox({
     checked: boolean | string,
     value: string
   ) => {
-    if(type==="radio"){
+    if(type==="radio" || type==="rating"){
       (checked)?setCheckedItems([value]):setCheckedItems([]);
     }else{
       (checked)?setCheckedItems([...checkedItems, value]):setCheckedItems(checkedItems.filter((item) => item !== value)); 
@@ -55,51 +57,63 @@ export function CustomSelectBox({
   };
 
   return (
-    <div className="w-[93%]">
-      <Button
-        variant="outline"
-        className="mt-2 w-full"
+    <div className="px-2 m-0 w-full">
+
+       {(!headless) && (
+        <div 
+        className={`flex items-center text-base cursor-pointer  p-2 mb-2 rounded-md w-full ${expanded ? "border-b pointer-events-none border-gray-200" : "border-1"}`}
         {...(!expanded && { onClick: () => setOpen(!open) })}
-      >
+         >
         {name} {(type=="checkbox" && checkedItems.length) ? `(${checkedItems.length})` : ""}
       
-        {(type=="radio" && checkedItems.length) ? `: ${options.find((option) => option.value === checkedItems[0])?.name}` : ""}
-      </Button>
-      <ScrollArea className="max-h-[200px] rounded-md border scrollbar-thin overflow-y-auto">
+        {((type=="radio" || type=="rating") && checkedItems.length) ? `: ${options?.find((option) => option.value === checkedItems[0])?.name}` : ""}
+        <TriangleDownIcon className={`ml-auto ${open||expanded ? "rotate-180" : ""}`} />
+       </div>
+
+       )}
+        
+   
+    
         {(open || expanded) && (
-          <div>
+          <div className=" flex-col px-1">
             {type === "radio" || type === "rating" ? (
               <RadioGroup
-                onValueChange={(value) => handleCheckedChange(true, value)}
-                defaultValue={selected?.[0] ?? ""}
+                onValueChange={(value) => setCheckedItems([value])}
+                value={checkedItems?.[0] ?? ""}
               >
-                 <div className="flex items-center" key={field} onClick={() => {handleCheckedChange(false, "");setOpen(false);}}>
-                    <label  className="text-sm font-medium">
-                      {name} 
-                    </label>
-                  </div>
+                 
                 {options && options?.map((option) => (
                   <div className="flex items-center space-x-2" key={option.value}>
-                    <RadioGroupItem id={option.value} value={option.value} />
-                    <label htmlFor={option.value} className="text-sm font-medium">
+                    <RadioGroupItem id={field+"-"+option.value} value={option.value} />
+                    <label htmlFor={field+"-"+option.value} className="text-sm font-medium">
                       {option.name} 
                     </label>
-                    {type === "rating" && <RatingComponent />}
+                    {type === "rating" && <RatingComponent value={Number(option.value)}/>}
                   </div>
                 ))}
+             
+                  {checkedItems.length>0 && (
+                    <div className="flex items-center justify-end space-x-2">
+                    <Button variant="outline" size="sm" className=" text-xs " onClick={() => {setCheckedItems([]);setOpen(false);}}>
+                      Remove selection
+                      </Button>
+                      </div>
+                    )}
+                     
+                
               </RadioGroup>
             ) : (
               // Render Checkboxes if type is "checkbox"
               options?.map((option) => {
-                const checked = selected.includes(option.value);
+                //const checked = selected.includes(option.value);
                 return (
-                  <div className="flex items-center space-x-2 p-1" key={option.value}>
+                  <div className="flex items-center space-x-2 p-2" key={option.value}>
                     <Checkbox
-                      id={option.value}
-                      defaultChecked={checked}
+                      id={field+"-"+option.value}
+                      checked={checkedItems.includes(option.value)}
                       onCheckedChange={(checked) => handleCheckedChange(checked, option.value)}
                     />
-                    <label htmlFor={option.value} className="text-sm font-medium">
+                    <label htmlFor={field+"-"+option.value} className="text-sm font-medium">
                       {option.name}
                     </label>
                   </div>
@@ -108,7 +122,7 @@ export function CustomSelectBox({
             )}
           </div>
         )}
-      </ScrollArea>
+   
       <div className="flex flex-wrap flex-col gap-1 m-2">
         {!expanded && type === "checkbox" &&
           checkedItems.map((item) => (

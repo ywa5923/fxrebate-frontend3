@@ -4,5 +4,5 @@ export type FilterField = {
     name: string;
     type: 'checkbox' | 'radio' | 'rating';
     expanded?: boolean;
-    options?: FilterOption[]; // Only for fields with predefined options
+    options: FilterOption[]; // Only for fields with predefined options
   };

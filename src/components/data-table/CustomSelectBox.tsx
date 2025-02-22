@@ -14,10 +14,10 @@ export function CustomSelectBox({
   selected,
 }: {
   filter: FilterField;
-  selected?: string[] | null;
+  selected: string[] | [];
 }) {
   const [open, setOpen] = useState(false);
-  const [checkedItems, setCheckedItems] = useState<string[]>([]);
+  const [checkedItems, setCheckedItems] = useState<string[]>(selected || []);
 
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -25,31 +25,28 @@ export function CustomSelectBox({
   const params = new URLSearchParams(searchParams);
 
   useEffect(() => {
-    setCheckedItems(selected ? [...selected] : []);
+    if(JSON.stringify(selected)!==JSON.stringify(checkedItems))
+    setCheckedItems([...selected]);
   }, [selected]);
+
+  useEffect(() => {
+    if (params.has("page")) params.delete("page");
+
+    if(checkedItems.length===0) {
+      params.delete(field);
+    }else{
+      const paramsArray = new Set(checkedItems);
+      params.set(field, Array.from(paramsArray).join(","));
+    }
+    
+    replace(`${pathname}?${params}`);
+  }, [checkedItems]);
 
   const handleCheckedChange = (
     checked: boolean | string,
-    value: string,
-    field: string,
-    type: string
+    value: string
   ) => {
-    if (params.has("page")) params.delete("page");
-
-    const paramsArray = new Set(params.get(field)?.split(",") || []);
-    if (checked) {
-      if (type === "radio") paramsArray.clear();
-      paramsArray.add(value);
-    } else {
-      paramsArray.delete(value);
-      if (!paramsArray.size) {
-        params.delete(field);
-        replace(`${pathname}?${params.toString()}`);
-        return;
-      }
-    }
-    params.set(field, Array.from(paramsArray).join(","));
-    replace(`${pathname}?${params}`);
+    (checked)?setCheckedItems([...checkedItems, value]):setCheckedItems(checkedItems.filter((item) => item !== value)); 
   };
 
   return (
@@ -66,10 +63,10 @@ export function CustomSelectBox({
           <div>
             {type === "radio" || type === "rating" ? (
               <RadioGroup
-                onValueChange={(value) => handleCheckedChange(true, value, field, type)}
+                onValueChange={(value) => handleCheckedChange(true, value)}
                 defaultValue={selected?.[0] ?? ""}
               >
-                {options?.map((option) => (
+                {options &&options?.map((option) => (
                   <div className="flex items-center space-x-2" key={option.value}>
                     <RadioGroupItem id={option.value} value={option.value} />
                     <label htmlFor={option.value} className="text-sm font-medium">
@@ -82,13 +79,13 @@ export function CustomSelectBox({
             ) : (
               // Render Checkboxes if type is "checkbox"
               options?.map((option) => {
-                const checked = checkedItems.includes(option.value);
+                const checked = selected.includes(option.value);
                 return (
                   <div className="flex items-center space-x-2 p-1" key={option.value}>
                     <Checkbox
                       id={option.value}
                       defaultChecked={checked}
-                      onCheckedChange={(checked) => handleCheckedChange(checked, option.value, field, type)}
+                      onCheckedChange={(checked) => handleCheckedChange(checked, option.value)}
                     />
                     <label htmlFor={option.value} className="text-sm font-medium">
                       {option.name}
@@ -110,7 +107,7 @@ export function CustomSelectBox({
               {options?.find((option) => option.value === item)?.name}
               <span
                 onClick={() => {
-                  handleCheckedChange(false, item, field, type);
+                  handleCheckedChange(false, item);
                   setCheckedItems((prev) => prev.filter((i) => i !== item));
                   setOpen(false);
                 }}

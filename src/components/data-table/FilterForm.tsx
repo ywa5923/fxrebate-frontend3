@@ -64,7 +64,7 @@ export function FilterForm({ filters }: { filters: FilterField[] }) {
                 //let selected=(filter.field in filterParams)?filterParams[filter.field]:null;
               //  const selected=filterParams[filter.field]??null;
                // const selected = useMemo(() => [...(filterParams[filter.field] ?? [])], [filterParams[filter.field]]);
-               const selected = filterParams[filter.field] ? [...filterParams[filter.field]] : null;
+               const selected = filterParams[filter.field] ? [...filterParams[filter.field]] : [];
                
 
                // console.log(`Rendering CustomSelectBox for ${filter.field}:`, selected);
